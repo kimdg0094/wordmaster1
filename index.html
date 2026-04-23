@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>영단어 1~500 암기</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f4f8;--card-bg:#ffffff;--card-border:#dde3ec;
+  --accent:#4f46e5;--accent2:#0284c7;
+  --green:#16a34a;--red:#dc2626;--text:#1e293b;--muted:#64748b;
+}
+body{font-family:'Source Sans 3','Segoe UI',Arial,sans-serif;background:var(--bg);min-height:100vh;color:var(--text);overflow-x:hidden}
+body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse 60% 50% at 10% 10%,rgba(79,70,229,0.07) 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 90% 90%,rgba(2,132,199,0.06) 0%,transparent 60%);pointer-events:none;z-index:0}
+#app{position:relative;z-index:1}
+.start-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 24px;text-align:center}
+.start-logo{font-size:72px;line-height:1;margin-bottom:6px;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.start-title{font-size:28px;font-weight:700;color:var(--text);margin-bottom:6px}
+.start-sub{font-size:15px;color:var(--muted);margin-bottom:36px}
+.start-sub b{color:var(--accent)}
+.info-box{background:#fff;border:1px solid var(--card-border);border-radius:20px;padding:24px 28px;margin-bottom:32px;text-align:left;width:100%;max-width:440px;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
+.info-title{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:16px}
+.info-row{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;font-size:14px;color:#334155;line-height:1.5}
+.info-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.start-btn{background:var(--accent);border:none;border-radius:16px;padding:16px 52px;font-size:18px;font-weight:700;color:white;cursor:pointer;box-shadow:0 4px 16px rgba(79,70,229,0.3);transition:transform .15s,box-shadow .15s}
+.start-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(79,70,229,0.4)}
+.main{display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:0 16px 40px}
+.header{width:100%;max-width:620px;padding:18px 4px 12px;display:flex;align-items:center;justify-content:space-between}
+.stats{display:flex;gap:20px}
+.stat{text-align:center}
+.stat-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;font-weight:700;margin-bottom:2px}
+.stat-val{font-size:24px;font-weight:700}
+.wrong-btn{border-radius:12px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;border:1px solid rgba(220,38,38,0.3);background:rgba(220,38,38,0.07);color:var(--red)}
+.wrong-btn:hover{background:rgba(220,38,38,0.14)}
+.wrong-btn.empty{border-color:var(--card-border);background:#f8fafc;color:var(--muted)}
+.prog-wrap{width:100%;max-width:620px;margin-bottom:18px;padding:0 4px}
+.prog-bg{background:#dde3ec;border-radius:99px;height:4px}
+.prog-fill{background:linear-gradient(90deg,var(--accent),var(--accent2));height:100%;border-radius:99px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.prog-txt{font-size:11px;color:var(--muted);text-align:right;margin-top:5px}
+.card-area{width:100%;max-width:580px;display:flex;flex-direction:column;align-items:center}
+.badges{display:flex;gap:8px;margin-bottom:14px;min-height:28px;align-items:center}
+.badge{border-radius:7px;padding:4px 12px;font-size:11px;font-weight:700;letter-spacing:.3px}
+.badge-pos{background:#ede9fe;border:1px solid #c4b5fd;color:#5b21b6}
+.badge-hard{background:#fee2e2;border:1px solid #fca5a5;color:#b91c1c}
+.badge-new{background:#dcfce7;border:1px solid #86efac;color:#15803d}
+.card-front{width:100%;min-height:280px;border-radius:24px;background:#fff;border:1px solid var(--card-border);display:flex;flex-direction:column;justify-content:center;align-items:center;cursor:pointer;padding:40px 32px;box-shadow:0 4px 20px rgba(0,0,0,0.08);transition:box-shadow .2s,transform .15s}
+.card-front:hover{box-shadow:0 8px 32px rgba(79,70,229,0.12);transform:translateY(-2px)}
+.dir-label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:16px;text-transform:uppercase}
+.card-word{font-size:48px;font-weight:700;color:var(--text);text-align:center;letter-spacing:0;line-height:1.15}
+.card-word.medium{font-size:36px}
+.card-word.long{font-size:26px}
+.card-hint{color:var(--muted);font-size:13px;margin-top:14px}
+.card-hint kbd{background:#f1f5f9;border:1px solid #cbd5e1;border-radius:4px;padding:1px 6px;font-family:monospace;font-size:11px;margin:0 2px}
+.card-back{width:100%;border-radius:24px;background:#fff;padding:30px 28px;box-shadow:0 4px 20px rgba(0,0,0,0.08);border:1px solid var(--card-border)}
+.back-dir{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.back-word{font-size:28px;font-weight:700;color:#0f172a;margin-bottom:8px}
+.back-meaning{display:inline-block;background:var(--accent);color:white;border-radius:10px;padding:8px 18px;font-size:18px;font-weight:700;margin-bottom:20px}
+.syn-ant{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.sa-box{border-radius:12px;padding:12px 16px}
+.sa-box.syn{background:#f0fdf4;border:1px solid #bbf7d0}
+.sa-box.ant{background:#fff1f2;border:1px solid #fecdd3}
+.sa-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+.sa-lbl.syn{color:#16a34a}
+.sa-lbl.ant{color:#dc2626}
+.sa-val{font-size:15px;font-weight:700}
+.sa-val.syn{color:#15803d}
+.sa-val.ant{color:#b91c1c}
+.ex-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px}
+.ex-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#475569;margin-bottom:6px}
+.ex-en{font-size:14px;font-style:italic;color:#1e293b;font-weight:600;margin-bottom:4px;line-height:1.5}
+.ex-kr{font-size:13px;color:#64748b;line-height:1.5}
+.flip-btn{margin-top:18px;background:var(--accent);border:none;border-radius:14px;padding:14px 44px;font-size:16px;font-weight:700;color:white;cursor:pointer;box-shadow:0 4px 14px rgba(79,70,229,0.3);transition:transform .15s,box-shadow .15s}
+.flip-btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(79,70,229,0.4)}
+.btn-row{display:flex;gap:14px;margin-top:16px;width:100%}
+.ans-btn{flex:1;border-radius:14px;padding:15px;font-size:16px;font-weight:700;cursor:pointer;transition:transform .15s;border:2px solid}
+.btn-no{background:#fff1f2;border-color:#fca5a5;color:#dc2626}
+.btn-no:hover{background:#fee2e2;transform:scale(1.02)}
+.btn-yes{background:#f0fdf4;border-color:#86efac;color:#16a34a}
+.btn-yes:hover{background:#dcfce7;transform:scale(1.02)}
+.kbd-hint{font-size:12px;color:var(--muted);text-align:center;margin-top:10px}
+.kbd-hint span{background:#f1f5f9;border:1px solid #cbd5e1;border-radius:4px;padding:1px 7px;font-family:monospace;margin:0 2px;color:#475569}
+.panel{position:fixed;right:0;top:0;bottom:0;width:310px;background:#fff;border-left:1px solid var(--card-border);box-shadow:-4px 0 20px rgba(0,0,0,0.08);padding:24px 18px;overflow-y:auto;z-index:100;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.panel.open{transform:translateX(0)}
+.panel-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.panel-title{font-size:16px;font-weight:700;color:var(--text)}
+.panel-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:24px;line-height:1}
+.w-item{background:#fff8f8;border:1px solid #fecdd3;border-radius:12px;padding:12px 14px;margin-bottom:8px}
+.w-word{font-weight:700;font-size:14px;color:var(--text)}
+.w-meaning{font-size:12px;color:var(--muted);margin-top:2px}
+.w-weight{font-size:11px;color:var(--red);font-weight:700;margin-top:4px}
+.empty-msg{color:var(--muted);font-size:14px;text-align:center;margin-top:40px;line-height:1.8}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const WORDS = [
+{id:1,word:"provide",meaning:"[동] 제공하다, 공급하다",pos:"v",syn:"supply",ant:"withhold",ex:"The company provides free lunch for all employees.",exKr:"회사는 모든 직원에게 무료 점심을 제공한다."},
+{id:2,word:"develop",meaning:"[동] 개발하다, 발전시키다",pos:"v",syn:"improve",ant:"decline",ex:"Scientists are developing a new cancer treatment.",exKr:"과학자들이 새로운 암 치료법을 개발하고 있다."},
+{id:3,word:"service",meaning:"[명] 서비스, 근무, 봉사",pos:"n",syn:"support",ant:"negligence",ex:"Our customer service team is available 24 hours.",exKr:"고객 서비스팀은 24시간 이용 가능합니다."},
+{id:4,word:"inform",meaning:"[동] 알리다, 통지하다",pos:"v",syn:"notify",ant:"conceal",ex:"Please inform us if your address changes.",exKr:"주소가 변경되면 알려주세요."},
+{id:5,word:"relationship",meaning:"[명] 관계",pos:"n",syn:"connection",ant:"separation",ex:"A good relationship with clients is essential.",exKr:"고객과의 좋은 관계는 필수적이다."},
+{id:6,word:"improve",meaning:"[동] 향상시키다, 나아지다",pos:"v",syn:"enhance",ant:"worsen",ex:"Regular exercise can improve your overall health.",exKr:"규칙적인 운동은 전반적인 건강을 향상시킬 수 있다."},
+{id:7,word:"individual",meaning:"[형/명] 개인의, 개인",pos:"adj/n",syn:"personal",ant:"collective",ex:"Each individual has the right to express opinions.",exKr:"각 개인은 의견을 표현할 권리가 있다."},
+{id:8,word:"require",meaning:"[동] 요구하다, 필요로 하다",pos:"v",syn:"demand",ant:"offer",ex:"This job requires five years of experience.",exKr:"이 직업은 5년의 경력을 필요로 한다."},
+{id:9,word:"advise",meaning:"[동] 충고하다, 조언하다",pos:"v",syn:"recommend",ant:"mislead",ex:"Doctors advise patients to get enough sleep.",exKr:"의사들은 환자들에게 충분한 수면을 취하도록 조언한다."},
+{id:10,word:"social",meaning:"[형] 사회의, 사교적인",pos:"adj",syn:"communal",ant:"isolated",ex:"Social media has changed how people communicate.",exKr:"소셜 미디어는 사람들이 소통하는 방식을 바꿨다."},
+{id:11,word:"amount",meaning:"[명] 총액, 양",pos:"n",syn:"quantity",ant:"—",ex:"A large amount of data was collected.",exKr:"많은 양의 데이터가 수집되었다."},
+{id:12,word:"behave",meaning:"[동] 행동하다",pos:"v",syn:"act",ant:"misbehave",ex:"Children should behave politely in public.",exKr:"아이들은 공공장소에서 예의 바르게 행동해야 한다."},
+{id:13,word:"employ",meaning:"[동] 고용하다, 쓰다",pos:"v",syn:"hire",ant:"dismiss",ex:"The factory employs over two thousand workers.",exKr:"공장은 2천 명 이상의 근로자를 고용한다."},
+{id:14,word:"attitude",meaning:"[명] 태도, 입장",pos:"n",syn:"mindset",ant:"—",ex:"A positive attitude helps you overcome challenges.",exKr:"긍정적인 태도는 도전을 극복하는 데 도움이 된다."},
+{id:15,word:"research",meaning:"[명/동] 연구, 조사하다",pos:"n/v",syn:"study",ant:"ignore",ex:"Researchers are studying the effects of climate change.",exKr:"연구자들은 기후 변화의 영향을 연구하고 있다."},
+{id:16,word:"audience",meaning:"[명] 청중, 관객",pos:"n",syn:"crowd",ant:"—",ex:"The audience applauded after the performance.",exKr:"공연 후 관객들이 박수를 쳤다."},
+{id:17,word:"volunteer",meaning:"[명/동] 자원봉사자, 자원하다",pos:"n/v",syn:"helper",ant:"paid worker",ex:"Many volunteers helped at the local charity event.",exKr:"많은 자원봉사자들이 지역 자선 행사를 도왔다."},
+{id:18,word:"influence",meaning:"[명/동] 영향, 영향을 미치다",pos:"n/v",syn:"impact",ant:"—",ex:"Parents have a great influence on their children.",exKr:"부모는 자녀에게 큰 영향을 미친다."},
+{id:19,word:"terrible",meaning:"[형] 끔찍한, 무서운",pos:"adj",syn:"awful",ant:"wonderful",ex:"The weather was terrible during our vacation.",exKr:"휴가 중 날씨가 끔찍했다."},
+{id:20,word:"opportunity",meaning:"[명] 기회",pos:"n",syn:"chance",ant:"obstacle",ex:"This is a great opportunity to advance your career.",exKr:"이것은 경력을 발전시킬 좋은 기회이다."},
+{id:21,word:"ability",meaning:"[명] 능력, 재능",pos:"n",syn:"skill",ant:"inability",ex:"She has the ability to speak four languages.",exKr:"그녀는 4개 언어를 말할 수 있는 능력이 있다."},
+{id:22,word:"expense",meaning:"[명] 비용, 지출",pos:"n",syn:"cost",ant:"income",ex:"Travel expenses must be approved in advance.",exKr:"출장 비용은 사전에 승인받아야 한다."},
+{id:23,word:"local",meaning:"[형] 지역의, 지방의",pos:"adj",syn:"nearby",ant:"national",ex:"Local residents oppose the new development plan.",exKr:"지역 주민들은 새 개발 계획에 반대한다."},
+{id:24,word:"involve",meaning:"[동] 관련시키다, 포함하다",pos:"v",syn:"include",ant:"exclude",ex:"This project involves many different departments.",exKr:"이 프로젝트는 많은 부서가 관련되어 있다."},
+{id:25,word:"stress",meaning:"[명/동] 스트레스, 강조하다",pos:"n/v",syn:"pressure",ant:"relax",ex:"Work stress can affect your physical health.",exKr:"업무 스트레스는 신체 건강에 영향을 줄 수 있다."},
+{id:26,word:"therefore",meaning:"[부] 그러므로, 따라서",pos:"adv",syn:"thus",ant:"—",ex:"She studied hard; therefore, she passed the exam.",exKr:"그녀는 열심히 공부했다. 그러므로 시험에 합격했다."},
+{id:27,word:"positive",meaning:"[형] 긍정적인, 낙관적인",pos:"adj",syn:"optimistic",ant:"negative",ex:"Try to stay positive during difficult times.",exKr:"어려운 시간에도 긍정적인 태도를 유지하세요."},
+{id:28,word:"average",meaning:"[형/명] 평균의, 평균",pos:"adj/n",syn:"mean",ant:"extreme",ex:"The average salary increased by five percent.",exKr:"평균 급여가 5% 증가했다."},
+{id:29,word:"ride",meaning:"[동/명] 타다, 타기",pos:"v/n",syn:"travel",ant:"walk",ex:"She rides her bicycle to work every morning.",exKr:"그녀는 매일 아침 자전거를 타고 출근한다."},
+{id:30,word:"encourage",meaning:"[동] 격려하다, 권장하다",pos:"v",syn:"motivate",ant:"discourage",ex:"Teachers encourage students to ask questions.",exKr:"교사들은 학생들이 질문하도록 격려한다."},
+{id:31,word:"determine",meaning:"[동] 결정하다, 결심하다",pos:"v",syn:"decide",ant:"hesitate",ex:"The test results will determine the next steps.",exKr:"테스트 결과가 다음 단계를 결정할 것이다."},
+{id:32,word:"international",meaning:"[형] 국제의, 국제적인",pos:"adj",syn:"global",ant:"domestic",ex:"The company expanded into international markets.",exKr:"회사는 국제 시장으로 확장했다."},
+{id:33,word:"consume",meaning:"[동] 소비하다, 먹다",pos:"v",syn:"use",ant:"produce",ex:"People consume more energy in winter months.",exKr:"사람들은 겨울철에 더 많은 에너지를 소비한다."},
+{id:34,word:"impress",meaning:"[동] 감동시키다, 깊은 인상을 주다",pos:"v",syn:"amaze",ant:"bore",ex:"Her presentation impressed the entire board.",exKr:"그녀의 발표는 이사회 전체에 깊은 인상을 줬다."},
+{id:35,word:"object",meaning:"[명/동] 물체, 반대하다",pos:"n/v",syn:"thing",ant:"agree",ex:"Several members objected to the new policy.",exKr:"몇몇 회원들이 새 정책에 반대했다."},
+{id:36,word:"available",meaning:"[형] 이용할 수 있는",pos:"adj",syn:"accessible",ant:"unavailable",ex:"Tickets are still available for tonight\'s show.",exKr:"오늘 밤 공연 티켓이 아직 구매 가능하다."},
+{id:37,word:"contain",meaning:"[동] 포함하다, 함유하다",pos:"v",syn:"include",ant:"exclude",ex:"This drink contains no artificial ingredients.",exKr:"이 음료에는 인공 재료가 포함되지 않았다."},
+{id:38,word:"recognize",meaning:"[동] 인지하다, 알아보다",pos:"v",syn:"identify",ant:"ignore",ex:"I recognized her voice immediately on the phone.",exKr:"나는 전화에서 그녀의 목소리를 즉시 알아봤다."},
+{id:39,word:"material",meaning:"[명/형] 재료, 물질의",pos:"n/adj",syn:"substance",ant:"—",ex:"The building uses eco-friendly materials.",exKr:"건물은 친환경 자재를 사용한다."},
+{id:40,word:"comfort",meaning:"[명/동] 편안, 위로하다",pos:"n/v",syn:"ease",ant:"discomfort",ex:"A warm drink can bring great comfort on cold days.",exKr:"따뜻한 음료는 추운 날 큰 위안이 된다."},
+{id:41,word:"emotion",meaning:"[명] 감정",pos:"n",syn:"feeling",ant:"reason",ex:"She expressed her emotions through painting.",exKr:"그녀는 그림을 통해 감정을 표현했다."},
+{id:42,word:"amaze",meaning:"[동] 놀라게 하다",pos:"v",syn:"astonish",ant:"bore",ex:"The magician amazed the crowd with his tricks.",exKr:"마술사는 그의 묘기로 군중을 놀라게 했다."},
+{id:43,word:"reduce",meaning:"[동] 줄이다, 낮추다",pos:"v",syn:"decrease",ant:"increase",ex:"We need to reduce our carbon emissions.",exKr:"우리는 탄소 배출량을 줄여야 한다."},
+{id:44,word:"discover",meaning:"[동] 발견하다, 알아내다",pos:"v",syn:"find",ant:"miss",ex:"Scientists discovered a new species of fish.",exKr:"과학자들이 새로운 물고기 종을 발견했다."},
+{id:45,word:"decide",meaning:"[동] 결정하다, 결심하다",pos:"v",syn:"choose",ant:"hesitate",ex:"She decided to accept the job offer.",exKr:"그녀는 취업 제의를 받아들이기로 결정했다."},
+{id:46,word:"benefit",meaning:"[명/동] 이익, 도움이 되다",pos:"n/v",syn:"advantage",ant:"disadvantage",ex:"Regular reading benefits your vocabulary.",exKr:"규칙적인 독서는 어휘력에 도움이 된다."},
+{id:47,word:"affect",meaning:"[동] 영향을 미치다",pos:"v",syn:"influence",ant:"—",ex:"Bad weather can affect flight schedules.",exKr:"악천후는 항공 일정에 영향을 줄 수 있다."},
+{id:48,word:"level",meaning:"[명/형] 수준, 수평의",pos:"n/adj",syn:"degree",ant:"—",ex:"The water level rose after heavy rainfall.",exKr:"폭우 후 수위가 올랐다."},
+{id:49,word:"chemistry",meaning:"[명] 화학",pos:"n",syn:"science",ant:"—",ex:"She got an A in chemistry class this semester.",exKr:"그녀는 이번 학기 화학 수업에서 A를 받았다."},
+{id:50,word:"immediate",meaning:"[형] 즉각적인, 시급한",pos:"adj",syn:"instant",ant:"delayed",ex:"We need an immediate solution to this problem.",exKr:"이 문제에 즉각적인 해결책이 필요하다."},
+{id:51,word:"thus",meaning:"[부] 그러므로, 따라서",pos:"adv",syn:"therefore",ant:"—",ex:"He was late; thus, he missed the first lecture.",exKr:"그는 늦었다. 따라서 첫 번째 강의를 놓쳤다."},
+{id:52,word:"proper",meaning:"[형] 적절한, 알맞은",pos:"adj",syn:"appropriate",ant:"improper",ex:"Wear proper clothing for the job interview.",exKr:"취업 면접에 적절한 복장을 갖추세요."},
+{id:53,word:"performance",meaning:"[명] 공연, 성과",pos:"n",syn:"show",ant:"failure",ex:"Her performance at the concert was outstanding.",exKr:"콘서트에서 그녀의 공연은 뛰어났다."},
+{id:54,word:"essence",meaning:"[명] 본질, 정수",pos:"n",syn:"core",ant:"surface",ex:"The essence of leadership is serving others.",exKr:"리더십의 본질은 다른 사람을 섬기는 것이다."},
+{id:55,word:"economic",meaning:"[형] 경제의, 경제학의",pos:"adj",syn:"financial",ant:"—",ex:"The government introduced new economic policies.",exKr:"정부는 새로운 경제 정책을 도입했다."},
+{id:56,word:"cell",meaning:"[명] 세포",pos:"n",syn:"unit",ant:"—",ex:"Each cell in the body has a specific function.",exKr:"신체의 각 세포는 특정 기능을 가지고 있다."},
+{id:57,word:"focus",meaning:"[동/명] 집중하다, 초점",pos:"v/n",syn:"concentrate",ant:"distract",ex:"Please focus on completing the assignment today.",exKr:"오늘 과제 완성에 집중해 주세요."},
+{id:58,word:"issue",meaning:"[명] 논란거리, 쟁점, 문제",pos:"n",syn:"problem",ant:"solution",ex:"Climate change is a major global issue.",exKr:"기후 변화는 주요한 세계적 문제이다."},
+{id:59,word:"participate",meaning:"[동] 참여하다, 참가하다",pos:"v",syn:"join",ant:"withdraw",ex:"All students are encouraged to participate actively.",exKr:"모든 학생들이 적극적으로 참여하도록 권장된다."},
+{id:60,word:"demand",meaning:"[명/동] 요구, 수요",pos:"n/v",syn:"request",ant:"supply",ex:"Demand for electric vehicles is rising rapidly.",exKr:"전기차에 대한 수요가 빠르게 증가하고 있다."},
+{id:61,word:"occur",meaning:"[동] 발생하다, 일어나다",pos:"v",syn:"happen",ant:"—",ex:"Earthquakes often occur along fault lines.",exKr:"지진은 종종 단층선을 따라 발생한다."},
+{id:62,word:"complex",meaning:"[형/명] 복잡한, 복합 건물",pos:"adj/n",syn:"complicated",ant:"simple",ex:"This is a complex issue that requires careful study.",exKr:"이것은 신중한 연구가 필요한 복잡한 문제이다."},
+{id:63,word:"define",meaning:"[동] 정의하다, 규정하다",pos:"v",syn:"explain",ant:"confuse",ex:"The dictionary defines the word clearly.",exKr:"사전은 그 단어를 명확하게 정의한다."},
+{id:64,word:"proud",meaning:"[형] 자랑스러워하는",pos:"adj",syn:"pleased",ant:"ashamed",ex:"She felt proud after winning the competition.",exKr:"그녀는 대회에서 우승한 후 자랑스러움을 느꼈다."},
+{id:65,word:"aware",meaning:"[형] 인지하는, 알고 있는",pos:"adj",syn:"conscious",ant:"ignorant",ex:"Are you aware of the risks involved?",exKr:"관련된 위험을 알고 있나요?"},
+{id:66,word:"contact",meaning:"[동/명] 연락하다, 접촉",pos:"v/n",syn:"reach",ant:"avoid",ex:"Please contact our support team for assistance.",exKr:"도움을 위해 지원팀에 연락해 주세요."},
+{id:67,word:"profession",meaning:"[명] 직업, 전문직",pos:"n",syn:"career",ant:"hobby",ex:"Medicine is a highly respected profession.",exKr:"의학은 매우 존경받는 직업이다."},
+{id:68,word:"detail",meaning:"[명/동] 세부, 상술하다",pos:"n/v",syn:"specific",ant:"overview",ex:"Please provide more details about your experience.",exKr:"경험에 대해 더 자세한 내용을 제공해 주세요."},
+{id:69,word:"approach",meaning:"[동/명] 접근하다, 접근",pos:"v/n",syn:"method",ant:"—",ex:"We need a new approach to solve this problem.",exKr:"이 문제를 해결하기 위한 새로운 접근 방식이 필요하다."},
+{id:70,word:"career",meaning:"[명] 직업, 경력",pos:"n",syn:"profession",ant:"hobby",ex:"She built a successful career in marketing.",exKr:"그녀는 마케팅에서 성공적인 경력을 쌓았다."},
+{id:71,word:"package",meaning:"[명/동] 꾸러미, 포장하다",pos:"n/v",syn:"parcel",ant:"—",ex:"The package arrived two days late.",exKr:"소포가 이틀 늦게 도착했다."},
+{id:72,word:"disappear",meaning:"[동] 사라지다",pos:"v",syn:"vanish",ant:"appear",ex:"The fog disappeared as the sun rose.",exKr:"태양이 뜨면서 안개가 사라졌다."},
+{id:73,word:"novel",meaning:"[명] 소설",pos:"n",syn:"fiction",ant:"—",ex:"She read an interesting novel on the plane.",exKr:"그녀는 비행기에서 흥미로운 소설을 읽었다."},
+{id:74,word:"secure",meaning:"[형/동] 안전한, 안전하게 하다",pos:"adj/v",syn:"safe",ant:"vulnerable",ex:"Make sure your password is secure.",exKr:"비밀번호가 안전한지 확인하세요."},
+{id:75,word:"fashion",meaning:"[명] 유행, 패션",pos:"n",syn:"trend",ant:"—",ex:"Fashion trends change every season.",exKr:"패션 트렌드는 매 시즌 바뀐다."},
+{id:76,word:"despite",meaning:"[전] ~에도 불구하고",pos:"prep",syn:"although",ant:"—",ex:"Despite the rain, the event continued outside.",exKr:"비에도 불구하고 행사는 야외에서 계속되었다."},
+{id:77,word:"background",meaning:"[명] 배경, 배경 지식",pos:"n",syn:"history",ant:"—",ex:"Her background in science helped her greatly.",exKr:"과학에 대한 그녀의 배경 지식이 크게 도움이 되었다."},
+{id:78,word:"solution",meaning:"[명] 해결, 해결책",pos:"n",syn:"answer",ant:"problem",ex:"We need to find a solution quickly.",exKr:"우리는 빨리 해결책을 찾아야 한다."},
+{id:79,word:"generate",meaning:"[동] 일으키다, 발생시키다",pos:"v",syn:"produce",ant:"consume",ex:"Solar panels generate clean electricity.",exKr:"태양광 패널은 깨끗한 전기를 생산한다."},
+{id:80,word:"eventually",meaning:"[부] 결국",pos:"adv",syn:"finally",ant:"immediately",ex:"She eventually became the company\'s CEO.",exKr:"그녀는 결국 회사의 CEO가 되었다."},
+{id:81,word:"decrease",meaning:"[동/명] 줄다, 감소",pos:"v/n",syn:"reduce",ant:"increase",ex:"Sales decreased by ten percent last month.",exKr:"지난달 매출이 10% 감소했다."},
+{id:82,word:"recycle",meaning:"[동] 재활용하다",pos:"v",syn:"reuse",ant:"waste",ex:"It is important to recycle paper and plastic.",exKr:"종이와 플라스틱을 재활용하는 것이 중요하다."},
+{id:83,word:"desire",meaning:"[명/동] 욕구, 바라다",pos:"n/v",syn:"wish",ant:"dislike",ex:"She has a strong desire to become a doctor.",exKr:"그녀는 의사가 되고 싶은 강한 욕망이 있다."},
+{id:84,word:"balance",meaning:"[명/동] 균형, 균형을 이루다",pos:"n/v",syn:"equilibrium",ant:"imbalance",ex:"It is important to maintain a work-life balance.",exKr:"일과 생활의 균형을 유지하는 것이 중요하다."},
+{id:85,word:"negative",meaning:"[형] 부정적인",pos:"adj",syn:"pessimistic",ant:"positive",ex:"Try not to have a negative attitude at work.",exKr:"직장에서 부정적인 태도를 갖지 않도록 노력하세요."},
+{id:86,word:"follow",meaning:"[동] 따라가다, 따르다",pos:"v",syn:"obey",ant:"lead",ex:"Please follow the instructions on the label.",exKr:"라벨의 지침을 따라 주세요."},
+{id:87,word:"account",meaning:"[명/동] 은행 계좌, 설명하다",pos:"n/v",syn:"explanation",ant:"—",ex:"She opened a new bank account online.",exKr:"그녀는 온라인으로 새 은행 계좌를 개설했다."},
+{id:88,word:"publish",meaning:"[동] 발표하다, 출판하다",pos:"v",syn:"release",ant:"suppress",ex:"The author published her first novel last year.",exKr:"저자는 작년에 첫 번째 소설을 출판했다."},
+{id:89,word:"occasion",meaning:"[명] 경우, 특별한 일",pos:"n",syn:"event",ant:"—",ex:"Her birthday is a special occasion.",exKr:"그녀의 생일은 특별한 경우이다."},
+{id:90,word:"replace",meaning:"[동] 대체하다",pos:"v",syn:"substitute",ant:"keep",ex:"Electric vehicles will replace gasoline cars.",exKr:"전기차가 가솔린 차를 대체할 것이다."},
+{id:91,word:"constant",meaning:"[형/명] 일정한, 불변의",pos:"adj/n",syn:"steady",ant:"changing",ex:"The machine requires a constant power supply.",exKr:"기계는 일정한 전원 공급이 필요하다."},
+{id:92,word:"expert",meaning:"[명] 전문가",pos:"n",syn:"specialist",ant:"amateur",ex:"She is an expert in environmental science.",exKr:"그녀는 환경 과학 전문가이다."},
+{id:93,word:"term",meaning:"[명] 용어, 기간, 학기",pos:"n",syn:"period",ant:"—",ex:"The school term begins in September.",exKr:"학기는 9월에 시작된다."},
+{id:94,word:"relieve",meaning:"[동] 경감하다, 안도시키다",pos:"v",syn:"ease",ant:"worsen",ex:"This medicine will relieve your pain quickly.",exKr:"이 약은 빠르게 통증을 완화시켜 줄 것이다."},
+{id:95,word:"describe",meaning:"[동] 묘사하다, 표현하다",pos:"v",syn:"explain",ant:"—",ex:"Can you describe what happened at the scene?",exKr:"현장에서 무슨 일이 있었는지 묘사해 주시겠어요?"},
+{id:96,word:"biology",meaning:"[명] 생물학",pos:"n",syn:"life science",ant:"—",ex:"Biology class taught us about the human body.",exKr:"생물학 수업에서 인체에 대해 배웠다."},
+{id:97,word:"due",meaning:"[형] 만기의, ~하기로 되어 있는",pos:"adj",syn:"scheduled",ant:"overdue",ex:"The report is due by Friday afternoon.",exKr:"보고서는 금요일 오후까지 제출해야 한다."},
+{id:98,word:"equipment",meaning:"[명] 장치, 장비",pos:"n",syn:"tools",ant:"—",ex:"All safety equipment must be worn at all times.",exKr:"모든 안전 장비는 항상 착용해야 한다."},
+{id:99,word:"congratulate",meaning:"[동] 축하하다",pos:"v",syn:"praise",ant:"—",ex:"I want to congratulate you on your promotion.",exKr:"승진을 축하드립니다."},
+{id:100,word:"birth",meaning:"[명] 탄생",pos:"n",syn:"origin",ant:"death",ex:"The birth of her daughter changed everything.",exKr:"그녀의 딸의 탄생이 모든 것을 바꿨다."},
+{id:101,word:"compose",meaning:"[동] 구성하다, 작곡하다",pos:"v",syn:"create",ant:"destroy",ex:"Beethoven composed nine famous symphonies.",exKr:"베토벤은 9개의 유명한 교향곡을 작곡했다."},
+{id:102,word:"genius",meaning:"[명] 천재, 천재성",pos:"n",syn:"prodigy",ant:"ordinary",ex:"Einstein was considered a scientific genius.",exKr:"아인슈타인은 과학적 천재로 여겨졌다."},
+{id:103,word:"reflect",meaning:"[동] 반영하다, 반사하다",pos:"v",syn:"show",ant:"hide",ex:"The lake reflected the mountains perfectly.",exKr:"호수는 산을 완벽하게 반사했다."},
+{id:104,word:"cause",meaning:"[동/명] 야기하다, 원인",pos:"v/n",syn:"reason",ant:"effect",ex:"Pollution causes serious environmental damage.",exKr:"오염은 심각한 환경 피해를 야기한다."},
+{id:105,word:"frequent",meaning:"[형] 빈번한",pos:"adj",syn:"regular",ant:"rare",ex:"He makes frequent trips to the gym.",exKr:"그는 헬스장에 자주 방문한다."},
+{id:106,word:"factor",meaning:"[명] 요인, 요소",pos:"n",syn:"element",ant:"—",ex:"Diet is a key factor in maintaining good health.",exKr:"식단은 건강을 유지하는 데 중요한 요소이다."},
+{id:107,word:"extreme",meaning:"[형/명] 극단의, 극단",pos:"adj/n",syn:"intense",ant:"moderate",ex:"Extreme weather conditions are dangerous.",exKr:"극단적인 기상 조건은 위험하다."},
+{id:108,word:"tend",meaning:"[동] ~하는 경향이 있다",pos:"v",syn:"incline",ant:"—",ex:"Children tend to learn languages quickly.",exKr:"아이들은 언어를 빠르게 배우는 경향이 있다."},
+{id:109,word:"politics",meaning:"[명] 정치, 정치학",pos:"n",syn:"government",ant:"—",ex:"She studied politics at university.",exKr:"그녀는 대학에서 정치학을 공부했다."},
+{id:110,word:"insist",meaning:"[동] 주장하다",pos:"v",syn:"claim",ant:"doubt",ex:"He insisted that he was innocent.",exKr:"그는 자신이 무죄라고 주장했다."},
+{id:111,word:"extend",meaning:"[동] 연장하다, 넓히다",pos:"v",syn:"expand",ant:"shorten",ex:"The company decided to extend the deadline.",exKr:"회사는 마감일을 연장하기로 결정했다."},
+{id:112,word:"lonely",meaning:"[형] 외로운",pos:"adj",syn:"isolated",ant:"sociable",ex:"She felt lonely after moving to a new city.",exKr:"새 도시로 이사 후 그녀는 외로움을 느꼈다."},
+{id:113,word:"habitat",meaning:"[명] 서식지, 주거지",pos:"n",syn:"environment",ant:"—",ex:"Forests are the natural habitat of many animals.",exKr:"숲은 많은 동물들의 자연 서식지이다."},
+{id:114,word:"mental",meaning:"[형] 정신의",pos:"adj",syn:"psychological",ant:"physical",ex:"Mental health is just as important as physical health.",exKr:"정신 건강은 신체 건강만큼 중요하다."},
+{id:115,word:"steady",meaning:"[형] 안정된, 꾸준한",pos:"adj",syn:"stable",ant:"unstable",ex:"She made steady progress in her studies.",exKr:"그녀는 공부에서 꾸준한 발전을 이루었다."},
+{id:116,word:"exchange",meaning:"[동] 교환하다",pos:"v",syn:"swap",ant:"keep",ex:"They exchanged business cards at the conference.",exKr:"그들은 회의에서 명함을 교환했다."},
+{id:117,word:"active",meaning:"[형] 활동적인, 적극적인",pos:"adj",syn:"energetic",ant:"passive",ex:"She stays active by walking every day.",exKr:"그녀는 매일 걸어서 활동적으로 지낸다."},
+{id:118,word:"species",meaning:"[명] 종",pos:"n",syn:"type",ant:"—",ex:"Many species are endangered due to deforestation.",exKr:"많은 종들이 삼림 벌채로 인해 멸종 위기에 처해 있다."},
+{id:119,word:"athletic",meaning:"[형] 운동의, 운동경기의",pos:"adj",syn:"sporty",ant:"inactive",ex:"He was always the most athletic student in class.",exKr:"그는 항상 반에서 가장 운동을 잘하는 학생이었다."},
+{id:120,word:"dental",meaning:"[형] 치아의",pos:"adj",syn:"oral",ant:"—",ex:"Regular dental check-ups are very important.",exKr:"정기적인 치과 검진은 매우 중요하다."},
+{id:121,word:"delight",meaning:"[명/동] 기쁨, 기쁘게 하다",pos:"n/v",syn:"pleasure",ant:"disappointment",ex:"The surprise party filled her with delight.",exKr:"깜짝 파티가 그녀를 기쁨으로 가득 채웠다."},
+{id:122,word:"confident",meaning:"[형] 자신 있는",pos:"adj",syn:"assured",ant:"uncertain",ex:"She was confident in her ability to succeed.",exKr:"그녀는 성공할 수 있는 자신의 능력에 자신감이 있었다."},
+{id:123,word:"gradually",meaning:"[부] 점차, 서서히",pos:"adv",syn:"slowly",ant:"suddenly",ex:"The temperature gradually increased in spring.",exKr:"봄에 기온이 서서히 올라갔다."},
+{id:124,word:"shadow",meaning:"[명/동] 그림자, 그늘지게 하다",pos:"n/v",syn:"shade",ant:"light",ex:"The tall building cast a shadow over the park.",exKr:"높은 건물이 공원에 그림자를 드리웠다."},
+{id:125,word:"access",meaning:"[명/동] 접근, 접근하다",pos:"n/v",syn:"entry",ant:"denial",ex:"Students have access to the library all day.",exKr:"학생들은 하루 종일 도서관에 접근할 수 있다."},
+{id:126,word:"announce",meaning:"[동] 발표하다, 알리다",pos:"v",syn:"declare",ant:"conceal",ex:"The principal announced the new school rules.",exKr:"교장은 새로운 학교 규칙을 발표했다."},
+{id:127,word:"allow",meaning:"[동] 허락하다, 인정하다",pos:"v",syn:"permit",ant:"forbid",ex:"Dogs are not allowed inside the restaurant.",exKr:"식당 안에서는 개가 허용되지 않는다."},
+{id:128,word:"firm",meaning:"[형/명] 확고한, 회사",pos:"adj/n",syn:"solid",ant:"weak",ex:"She made a firm decision to quit smoking.",exKr:"그녀는 금연을 결심했다."},
+{id:129,word:"vary",meaning:"[동] 바꾸다, 변하다",pos:"v",syn:"change",ant:"stay",ex:"Prices may vary depending on the season.",exKr:"가격은 계절에 따라 다를 수 있다."},
+{id:130,word:"injure",meaning:"[동] 상처를 입히다",pos:"v",syn:"hurt",ant:"heal",ex:"He injured his knee during the soccer game.",exKr:"그는 축구 경기 중 무릎을 다쳤다."},
+{id:131,word:"permit",meaning:"[동] 허용[허락]하다",pos:"v",syn:"allow",ant:"forbid",ex:"Smoking is not permitted on school grounds.",exKr:"학교 구내에서는 흡연이 허용되지 않는다."},
+{id:132,word:"response",meaning:"[명] 응답, 반응",pos:"n",syn:"reply",ant:"question",ex:"Her response to the offer was immediate.",exKr:"제안에 대한 그녀의 반응은 즉각적이었다."},
+{id:133,word:"threat",meaning:"[명] 위협, 협박",pos:"n",syn:"danger",ant:"safety",ex:"Pollution is a serious threat to marine life.",exKr:"오염은 해양 생물에 심각한 위협이다."},
+{id:134,word:"electricity",meaning:"[명] 전기",pos:"n",syn:"power",ant:"—",ex:"The storm cut off electricity for three days.",exKr:"폭풍으로 3일 동안 전기가 끊겼다."},
+{id:135,word:"disabled",meaning:"[형] 장애를 가진",pos:"adj",syn:"impaired",ant:"able-bodied",ex:"The building provides access for disabled visitors.",exKr:"건물은 장애가 있는 방문객들을 위한 접근 시설을 갖추고 있다."},
+{id:136,word:"lack",meaning:"[명/동] 부족, ~이 부족하다",pos:"n/v",syn:"shortage",ant:"abundance",ex:"The project failed due to a lack of funding.",exKr:"프로젝트는 자금 부족으로 실패했다."},
+{id:137,word:"signify",meaning:"[동] 의미하다, 중요하다",pos:"v",syn:"mean",ant:"—",ex:"A red light signifies danger.",exKr:"빨간 불빛은 위험을 의미한다."},
+{id:138,word:"concentrate",meaning:"[동] 집중하다",pos:"v",syn:"focus",ant:"distract",ex:"It is hard to concentrate in a noisy room.",exKr:"시끄러운 방에서 집중하기 어렵다."},
+{id:139,word:"emphasize",meaning:"[동] 강조하다",pos:"v",syn:"stress",ant:"minimize",ex:"The teacher emphasized the importance of reading.",exKr:"선생님은 독서의 중요성을 강조했다."},
+{id:140,word:"astronomy",meaning:"[명] 천문학",pos:"n",syn:"space science",ant:"—",ex:"Astronomy helps us understand the universe.",exKr:"천문학은 우주를 이해하는 데 도움이 된다."},
+{id:141,word:"flood",meaning:"[명/동] 홍수, 범람시키다",pos:"n/v",syn:"overflow",ant:"drought",ex:"The flood destroyed hundreds of homes.",exKr:"홍수가 수백 채의 집을 파괴했다."},
+{id:142,word:"fuel",meaning:"[명/동] 연료, 연료를 가하다",pos:"n/v",syn:"energy",ant:"—",ex:"The car ran out of fuel on the highway.",exKr:"차가 고속도로에서 연료가 떨어졌다."},
+{id:143,word:"manufacture",meaning:"[동/명] 제조하다, 제조업",pos:"v/n",syn:"produce",ant:"destroy",ex:"The factory manufactures car parts.",exKr:"공장은 자동차 부품을 제조한다."},
+{id:144,word:"movement",meaning:"[명] 움직임, 운동",pos:"n",syn:"motion",ant:"stillness",ex:"The slow movement of the clouds was calming.",exKr:"구름의 느린 움직임이 마음을 진정시켰다."},
+{id:145,word:"capable",meaning:"[형] ~을 할 수 있는, 유능한",pos:"adj",syn:"able",ant:"incapable",ex:"She is capable of managing the whole team.",exKr:"그녀는 팀 전체를 관리할 수 있다."},
+{id:146,word:"combine",meaning:"[동] 결합하다, 겸비하다",pos:"v",syn:"merge",ant:"separate",ex:"Combine flour and eggs to make the dough.",exKr:"밀가루와 달걀을 합쳐 반죽을 만드세요."},
+{id:147,word:"gene",meaning:"[명] 유전자",pos:"n",syn:"DNA",ant:"—",ex:"Eye color is determined by genes.",exKr:"눈 색깔은 유전자에 의해 결정된다."},
+{id:148,word:"increase",meaning:"[동/명] 증가하다, 증가",pos:"v/n",syn:"grow",ant:"decrease",ex:"Sales increased by twenty percent this year.",exKr:"올해 매출이 20% 증가했다."},
+{id:149,word:"victim",meaning:"[명] 희생, 피해자",pos:"n",syn:"sufferer",ant:"offender",ex:"The charity helps victims of natural disasters.",exKr:"자선단체는 자연재해 피해자들을 돕는다."},
+{id:150,word:"pressure",meaning:"[명/동] 압력, 압력을 가하다",pos:"n/v",syn:"stress",ant:"ease",ex:"He felt pressure to finish the project on time.",exKr:"그는 프로젝트를 제때 끝내야 한다는 압박을 느꼈다."},
+{id:151,word:"accompany",meaning:"[동] 동반하다, 수반하다",pos:"v",syn:"escort",ant:"leave",ex:"A nurse accompanied the patient to the hospital.",exKr:"간호사가 환자를 병원까지 동행했다."},
+{id:152,word:"frustrate",meaning:"[동] 좌절시키다",pos:"v",syn:"disappoint",ant:"encourage",ex:"Repeated failures frustrated the young athlete.",exKr:"반복되는 실패가 젊은 운동선수를 좌절시켰다."},
+{id:153,word:"construct",meaning:"[동] 건설하다",pos:"v",syn:"build",ant:"demolish",ex:"They will construct a new bridge next year.",exKr:"그들은 내년에 새 다리를 건설할 것이다."},
+{id:154,word:"dwindle",meaning:"[동] 점점 줄어들다",pos:"v",syn:"decrease",ant:"grow",ex:"The population of the small village dwindled.",exKr:"작은 마을의 인구가 점점 줄어들었다."},
+{id:155,word:"commerce",meaning:"[명] 상업, 교역",pos:"n",syn:"trade",ant:"—",ex:"E-commerce has grown rapidly in recent years.",exKr:"전자 상거래는 최근 몇 년간 빠르게 성장했다."},
+{id:156,word:"entertain",meaning:"[동] 즐겁게 하다",pos:"v",syn:"amuse",ant:"bore",ex:"The comedian entertained the audience for hours.",exKr:"코미디언이 몇 시간 동안 관객을 즐겁게 했다."},
+{id:157,word:"predict",meaning:"[동] 예언하다, 예측하다",pos:"v",syn:"forecast",ant:"—",ex:"Scientists can predict volcanic eruptions.",exKr:"과학자들은 화산 폭발을 예측할 수 있다."},
+{id:158,word:"apologize",meaning:"[동] 사과하다",pos:"v",syn:"sorry",ant:"blame",ex:"He apologized for being late to the meeting.",exKr:"그는 회의에 늦은 것에 대해 사과했다."},
+{id:159,word:"sight",meaning:"[명] 시야, 광경, 시력",pos:"n",syn:"view",ant:"blindness",ex:"The sunset was a beautiful sight to behold.",exKr:"일몰은 아름다운 광경이었다."},
+{id:160,word:"quantity",meaning:"[명] 양",pos:"n",syn:"amount",ant:"quality",ex:"We need a large quantity of paper for printing.",exKr:"인쇄를 위해 많은 양의 종이가 필요하다."},
+{id:161,word:"conclude",meaning:"[동] 결론짓다, 끝내다",pos:"v",syn:"decide",ant:"begin",ex:"She concluded that the data was incorrect.",exKr:"그녀는 데이터가 부정확하다고 결론지었다."},
+{id:162,word:"donate",meaning:"[동] 기부하다",pos:"v",syn:"give",ant:"take",ex:"He donated all his savings to the charity.",exKr:"그는 모든 저축을 자선단체에 기부했다."},
+{id:163,word:"personality",meaning:"[명] 개성, 성격",pos:"n",syn:"character",ant:"—",ex:"She has a warm and friendly personality.",exKr:"그녀는 따뜻하고 친근한 성격을 가지고 있다."},
+{id:164,word:"struggle",meaning:"[동/명] 싸우다, 노력하다, 투쟁",pos:"v/n",syn:"fight",ant:"surrender",ex:"Many students struggle with math at school.",exKr:"많은 학생들이 학교에서 수학으로 어려움을 겪는다."},
+{id:165,word:"advantage",meaning:"[명] 유리한 점, 이점",pos:"n",syn:"benefit",ant:"disadvantage",ex:"Living near work is a big advantage.",exKr:"직장 근처에 사는 것은 큰 이점이다."},
+{id:166,word:"variety",meaning:"[명] 다양, 다양성",pos:"n",syn:"range",ant:"uniformity",ex:"The store offers a variety of products.",exKr:"그 가게는 다양한 제품을 제공한다."},
+{id:167,word:"enable",meaning:"[동] 가능하게 하다",pos:"v",syn:"allow",ant:"prevent",ex:"Technology enables us to work from anywhere.",exKr:"기술은 우리가 어디서든 일할 수 있게 해준다."},
+{id:168,word:"instruction",meaning:"[명] 지시, 사용 설명서",pos:"n",syn:"direction",ant:"—",ex:"Follow the instructions on the package carefully.",exKr:"패키지의 지침을 주의 깊게 따르세요."},
+{id:169,word:"assume",meaning:"[동] 추정하다, 가정하다",pos:"v",syn:"suppose",ant:"know",ex:"Don\'t assume without checking the facts first.",exKr:"사실을 먼저 확인하지 않고 추정하지 마세요."},
+{id:170,word:"attempt",meaning:"[동/명] 시도하다, 시도",pos:"v/n",syn:"try",ant:"give up",ex:"She made a brave attempt to climb the mountain.",exKr:"그녀는 산을 오르려는 용감한 시도를 했다."},
+{id:171,word:"incredible",meaning:"[형] 믿기 어려울 만큼 굉장한",pos:"adj",syn:"amazing",ant:"ordinary",ex:"The view from the top was absolutely incredible.",exKr:"꼭대기에서 보는 경치는 믿기 어려울 만큼 굉장했다."},
+{id:172,word:"feature",meaning:"[명/동] 특징, ~을 특징으로 하다",pos:"n/v",syn:"characteristic",ant:"—",ex:"The main feature of this phone is its battery life.",exKr:"이 전화기의 주요 특징은 배터리 수명이다."},
+{id:173,word:"confuse",meaning:"[동] 혼동하다, 혼란시키다",pos:"v",syn:"mix up",ant:"clarify",ex:"Don\'t confuse the two similar words in English.",exKr:"영어에서 두 개의 비슷한 단어를 혼동하지 마세요."},
+{id:174,word:"electronic",meaning:"[형] 전자의",pos:"adj",syn:"digital",ant:"manual",ex:"She bought the latest electronic devices online.",exKr:"그녀는 온라인에서 최신 전자 기기를 샀다."},
+{id:175,word:"absorb",meaning:"[동] 흡수하다, 열중시키다",pos:"v",syn:"soak up",ant:"release",ex:"Plants absorb sunlight to produce energy.",exKr:"식물은 에너지를 생산하기 위해 햇빛을 흡수한다."},
+{id:176,word:"indicate",meaning:"[동] 가리키다, 나타내다",pos:"v",syn:"show",ant:"hide",ex:"The report indicates a rise in sales.",exKr:"보고서는 매출 증가를 나타낸다."},
+{id:177,word:"analyze",meaning:"[동] 분석하다",pos:"v",syn:"examine",ant:"—",ex:"Scientists analyzed the water samples carefully.",exKr:"과학자들은 물 샘플을 주의 깊게 분석했다."},
+{id:178,word:"stock",meaning:"[명/동] 재고품, 저장하다",pos:"n/v",syn:"supply",ant:"—",ex:"The store ran out of stock due to high demand.",exKr:"높은 수요로 인해 가게의 재고가 떨어졌다."},
+{id:179,word:"resident",meaning:"[명] 거주자",pos:"n",syn:"inhabitant",ant:"visitor",ex:"Residents can use the community center for free.",exKr:"거주자들은 무료로 커뮤니티 센터를 이용할 수 있다."},
+{id:180,word:"labor",meaning:"[명/동] 노동, 노동하다",pos:"n/v",syn:"work",ant:"rest",ex:"The workers labored for long hours in the heat.",exKr:"노동자들은 더위 속에서 오랜 시간 일했다."},
+{id:181,word:"remark",meaning:"[명/동] 의견, 의견을 말하다",pos:"n/v",syn:"comment",ant:"—",ex:"She made a helpful remark during the meeting.",exKr:"그녀는 회의 중 도움이 되는 의견을 말했다."},
+{id:182,word:"moral",meaning:"[형] 도덕적인",pos:"adj",syn:"ethical",ant:"immoral",ex:"It is our moral duty to help others in need.",exKr:"어려움에 처한 사람들을 돕는 것은 우리의 도덕적 의무이다."},
+{id:183,word:"embarrassed",meaning:"[형] 당황한",pos:"adj",syn:"ashamed",ant:"confident",ex:"She was embarrassed when she forgot her lines.",exKr:"그녀는 대사를 잊었을 때 당황했다."},
+{id:184,word:"claim",meaning:"[동/명] 주장하다, 요구",pos:"v/n",syn:"assert",ant:"deny",ex:"He claimed that he had never seen her before.",exKr:"그는 그녀를 한 번도 본 적이 없다고 주장했다."},
+{id:185,word:"reasonable",meaning:"[형] 논리적인, 분별력 있는",pos:"adj",syn:"sensible",ant:"unreasonable",ex:"The price is very reasonable for this quality.",exKr:"이 품질에 비해 가격이 매우 합리적이다."},
+{id:186,word:"interrupt",meaning:"[동] 방해하다, 중단하다",pos:"v",syn:"disturb",ant:"continue",ex:"Please do not interrupt while others are speaking.",exKr:"다른 사람이 말하는 동안 방해하지 마세요."},
+{id:187,word:"discount",meaning:"[명/동] 할인, 할인하다",pos:"n/v",syn:"reduction",ant:"surcharge",ex:"Members receive a ten percent discount.",exKr:"회원들은 10% 할인을 받는다."},
+{id:188,word:"creature",meaning:"[명] 생물, 피조물",pos:"n",syn:"being",ant:"—",ex:"The ocean is home to many strange creatures.",exKr:"바다는 많은 이상한 생물들의 집이다."},
+{id:189,word:"heal",meaning:"[동] 치료하다, 낫게 하다",pos:"v",syn:"cure",ant:"injure",ex:"Time often helps heal emotional wounds.",exKr:"시간이 지나면 감정적 상처가 치유되는 데 도움이 된다."},
+{id:190,word:"establish",meaning:"[동] 설립하다, 확립하다",pos:"v",syn:"found",ant:"abolish",ex:"The university was established over one hundred years ago.",exKr:"대학교는 100년 이상 전에 설립되었다."},
+{id:191,word:"revolution",meaning:"[명] 혁명, 갑작스러운 변화",pos:"n",syn:"uprising",ant:"stability",ex:"The industrial revolution changed the world.",exKr:"산업 혁명은 세상을 바꿨다."},
+{id:192,word:"criticize",meaning:"[동] 비난하다",pos:"v",syn:"blame",ant:"praise",ex:"The media criticized the government\'s decision.",exKr:"언론은 정부의 결정을 비난했다."},
+{id:193,word:"convince",meaning:"[동] 확신시키다, 납득시키다",pos:"v",syn:"persuade",ant:"doubt",ex:"She convinced him to take the job.",exKr:"그녀는 그가 그 일을 맡도록 설득했다."},
+{id:194,word:"efficient",meaning:"[형] 효율적인, 유능한",pos:"adj",syn:"productive",ant:"wasteful",ex:"The new system is much more efficient.",exKr:"새 시스템은 훨씬 더 효율적이다."},
+{id:195,word:"stranger",meaning:"[명] 낯선 사람, 문외한",pos:"n",syn:"outsider",ant:"friend",ex:"Never accept gifts from a stranger.",exKr:"낯선 사람으로부터 선물을 받지 마세요."},
+{id:196,word:"tide",meaning:"[명] 조수, 흐름",pos:"n",syn:"current",ant:"—",ex:"High tide made it impossible to walk on the beach.",exKr:"만조로 인해 해변을 걷는 것이 불가능했다."},
+{id:197,word:"obtain",meaning:"[동] 획득하다",pos:"v",syn:"acquire",ant:"lose",ex:"She obtained her driver\'s license last month.",exKr:"그녀는 지난달 운전 면허증을 취득했다."},
+{id:198,word:"assist",meaning:"[동] 도움을 주다",pos:"v",syn:"help",ant:"hinder",ex:"Volunteers assist the elderly with daily tasks.",exKr:"자원봉사자들은 노인들의 일상적인 일을 돕는다."},
+{id:199,word:"disaster",meaning:"[명] 재앙, 재난",pos:"n",syn:"catastrophe",ant:"blessing",ex:"The earthquake was a major natural disaster.",exKr:"지진은 심각한 자연재해였다."},
+{id:200,word:"terrific",meaning:"[형] 굉장한, 훌륭한",pos:"adj",syn:"wonderful",ant:"terrible",ex:"She did a terrific job on the presentation.",exKr:"그녀는 발표를 훌륭하게 해냈다."},
+{id:201,word:"specific",meaning:"[형] 구체적인, 특정한",pos:"adj",syn:"particular",ant:"general",ex:"Please give a specific example to explain.",exKr:"설명하기 위한 구체적인 예를 들어 주세요."},
+{id:202,word:"react",meaning:"[동] 반응하다",pos:"v",syn:"respond",ant:"—",ex:"How did he react when he heard the news?",exKr:"그는 소식을 들었을 때 어떻게 반응했나요?"},
+{id:203,word:"independent",meaning:"[형] 독립적인",pos:"adj",syn:"self-reliant",ant:"dependent",ex:"She became financially independent after graduation.",exKr:"그녀는 졸업 후 경제적으로 독립했다."},
+{id:204,word:"theory",meaning:"[명] 이론",pos:"n",syn:"hypothesis",ant:"fact",ex:"Darwin\'s theory of evolution changed science.",exKr:"다윈의 진화론은 과학을 바꿨다."},
+{id:205,word:"qualify",meaning:"[동] 자격을 얻다",pos:"v",syn:"meet requirements",ant:"fail",ex:"She qualified for the finals after her strong performance.",exKr:"그녀는 뛰어난 성과로 결승에 진출할 자격을 얻었다."},
+{id:206,word:"consider",meaning:"[동] 숙고하다, 고려하다",pos:"v",syn:"think about",ant:"ignore",ex:"Please consider all options before deciding.",exKr:"결정하기 전에 모든 선택지를 고려해 주세요."},
+{id:207,word:"recall",meaning:"[동/명] 상기하다, 회수하다, 상기",pos:"v/n",syn:"remember",ant:"forget",ex:"Can you recall where you left your keys?",exKr:"열쇠를 어디에 뒀는지 기억할 수 있나요?"},
+{id:208,word:"risk",meaning:"[명/동] 위험, 위험을 감수하다",pos:"n/v",syn:"danger",ant:"safety",ex:"Starting a business always involves some risk.",exKr:"사업을 시작하는 것은 항상 어느 정도의 위험을 수반한다."},
+{id:209,word:"treatment",meaning:"[명] 취급, 대우, 치료법",pos:"n",syn:"therapy",ant:"—",ex:"The doctor recommended a new treatment plan.",exKr:"의사는 새로운 치료 계획을 권고했다."},
+{id:210,word:"engage",meaning:"[동] 관여하다, 약속하다",pos:"v",syn:"involve",ant:"disengage",ex:"She loves to engage in meaningful conversations.",exKr:"그녀는 의미 있는 대화에 참여하는 것을 좋아한다."},
+{id:211,word:"motivate",meaning:"[동] 동기를 부여하다",pos:"v",syn:"inspire",ant:"discourage",ex:"Good teachers motivate students to do their best.",exKr:"좋은 선생님은 학생들이 최선을 다하도록 동기를 부여한다."},
+{id:212,word:"clue",meaning:"[명] 실마리, 단서",pos:"n",syn:"hint",ant:"—",ex:"The detective found a key clue at the scene.",exKr:"형사는 현장에서 중요한 단서를 발견했다."},
+{id:213,word:"cancer",meaning:"[명] 암, 악성 종양",pos:"n",syn:"tumor",ant:"—",ex:"Early detection is key to treating cancer.",exKr:"조기 발견이 암 치료의 핵심이다."},
+{id:214,word:"elder",meaning:"[형/명] 나이가 위인, 연장자",pos:"adj/n",syn:"senior",ant:"junior",ex:"We should respect our elders and learn from them.",exKr:"우리는 어른들을 존경하고 그들로부터 배워야 한다."},
+{id:215,word:"depress",meaning:"[동] 우울하게 하다",pos:"v",syn:"sadden",ant:"cheer",ex:"Constant bad news can depress people.",exKr:"끊임없는 나쁜 소식은 사람들을 우울하게 만들 수 있다."},
+{id:216,word:"fascinate",meaning:"[동] 매료시키다",pos:"v",syn:"captivate",ant:"bore",ex:"The documentary fascinated viewers worldwide.",exKr:"다큐멘터리는 전 세계 시청자들을 매료시켰다."},
+{id:217,word:"violent",meaning:"[형] 난폭한, 폭력적인",pos:"adj",syn:"aggressive",ant:"peaceful",ex:"The protest turned violent after midnight.",exKr:"시위는 자정 이후에 폭력적으로 변했다."},
+{id:218,word:"alarm",meaning:"[명] 놀람, 경보",pos:"n",syn:"warning",ant:"calm",ex:"The fire alarm went off in the middle of the night.",exKr:"화재 경보가 한밤중에 울렸다."},
+{id:219,word:"edge",meaning:"[명] 가장자리, 날카로움, 우위",pos:"n",syn:"border",ant:"center",ex:"Be careful near the edge of the cliff.",exKr:"절벽 가장자리 근처에서 조심하세요."},
+{id:220,word:"deserve",meaning:"[동] ~을 받을 만하다",pos:"v",syn:"merit",ant:"—",ex:"She deserves the award for her hard work.",exKr:"그녀는 노력으로 상을 받을 자격이 있다."},
+{id:221,word:"route",meaning:"[명] 길, 통로, 항로",pos:"n",syn:"path",ant:"detour",ex:"We took the scenic route to avoid traffic.",exKr:"우리는 교통 체증을 피하기 위해 경치 좋은 길로 갔다."},
+{id:222,word:"psychology",meaning:"[명] 심리, 심리학",pos:"n",syn:"mental science",ant:"—",ex:"She majored in psychology at university.",exKr:"그녀는 대학에서 심리학을 전공했다."},
+{id:223,word:"passion",meaning:"[명] 열정",pos:"n",syn:"enthusiasm",ant:"indifference",ex:"His passion for music started at age five.",exKr:"음악에 대한 그의 열정은 5살에 시작되었다."},
+{id:224,word:"import",meaning:"[동/명] 수입하다, 수입",pos:"v/n",syn:"bring in",ant:"export",ex:"The country imports most of its oil.",exKr:"그 나라는 석유 대부분을 수입한다."},
+{id:225,word:"purchase",meaning:"[동/명] 구매하다, 구매",pos:"v/n",syn:"buy",ant:"sell",ex:"You can purchase tickets at the box office.",exKr:"매표소에서 티켓을 구매할 수 있다."},
+{id:226,word:"conscience",meaning:"[명] 양심",pos:"n",syn:"morality",ant:"—",ex:"His conscience told him to tell the truth.",exKr:"그의 양심은 그에게 진실을 말하라고 했다."},
+{id:227,word:"pose",meaning:"[동/명] 자세를 취하다, 자세",pos:"v/n",syn:"position",ant:"—",ex:"The model posed for the magazine cover.",exKr:"모델이 잡지 표지를 위해 포즈를 취했다."},
+{id:228,word:"length",meaning:"[명] 길이",pos:"n",syn:"distance",ant:"width",ex:"Measure the length of the table carefully.",exKr:"테이블의 길이를 주의 깊게 측정하세요."},
+{id:229,word:"severe",meaning:"[형] 심한, 엄격한",pos:"adj",syn:"serious",ant:"mild",ex:"The patient was in severe pain after surgery.",exKr:"환자는 수술 후 심한 통증을 겪었다."},
+{id:230,word:"decade",meaning:"[명] 10년",pos:"n",syn:"ten years",ant:"—",ex:"The city has changed a lot in the last decade.",exKr:"도시는 지난 10년 동안 많이 변했다."},
+{id:231,word:"occupy",meaning:"[동] 차지하다, 전념하다",pos:"v",syn:"take up",ant:"vacate",ex:"The new factory will occupy a large area.",exKr:"새 공장은 넓은 면적을 차지할 것이다."},
+{id:232,word:"acquire",meaning:"[동] 습득하다",pos:"v",syn:"obtain",ant:"lose",ex:"She acquired new skills through online courses.",exKr:"그녀는 온라인 강좌를 통해 새로운 기술을 습득했다."},
+{id:233,word:"interact",meaning:"[동] 상호 작용하다",pos:"v",syn:"connect",ant:"isolate",ex:"Students interact with each other during group work.",exKr:"학생들은 그룹 활동 중 서로 상호 작용한다."},
+{id:234,word:"brief",meaning:"[형/동] 간단한, 간단히 알리다",pos:"adj/v",syn:"short",ant:"lengthy",ex:"She gave a brief summary of the meeting.",exKr:"그녀는 회의를 간략하게 요약했다."},
+{id:235,word:"observe",meaning:"[동] 관찰하다, 준수하다",pos:"v",syn:"watch",ant:"ignore",ex:"Scientists observe animal behavior in the wild.",exKr:"과학자들은 야생에서 동물 행동을 관찰한다."},
+{id:236,word:"poetry",meaning:"[명] 시, 운문",pos:"n",syn:"verse",ant:"prose",ex:"She writes poetry in her spare time.",exKr:"그녀는 여가 시간에 시를 쓴다."},
+{id:237,word:"salary",meaning:"[명] 급료, 봉급",pos:"n",syn:"wage",ant:"—",ex:"His salary increased after the promotion.",exKr:"승진 후 그의 급여가 올랐다."},
+{id:238,word:"grain",meaning:"[명] 곡물, 낟알",pos:"n",syn:"cereal",ant:"—",ex:"Wheat is one of the most important grain crops.",exKr:"밀은 가장 중요한 곡물 작물 중 하나이다."},
+{id:239,word:"meaningful",meaning:"[형] 의미 있는, 의미심장한",pos:"adj",syn:"significant",ant:"pointless",ex:"She wanted to have a meaningful conversation.",exKr:"그녀는 의미 있는 대화를 하고 싶었다."},
+{id:240,word:"weed",meaning:"[명/동] 잡초, 잡초를 제거하다",pos:"n/v",syn:"unwanted plant",ant:"—",ex:"He spent the morning weeding his garden.",exKr:"그는 오전에 정원에서 잡초를 제거했다."},
+{id:241,word:"survival",meaning:"[명] 생존",pos:"n",syn:"existence",ant:"death",ex:"Teamwork is essential for survival in the wild.",exKr:"팀워크는 야생에서의 생존에 필수적이다."},
+{id:242,word:"comment",meaning:"[명/동] 논평, 논평하다",pos:"n/v",syn:"remark",ant:"—",ex:"She left a positive comment on the blog post.",exKr:"그녀는 블로그 게시물에 긍정적인 댓글을 남겼다."},
+{id:243,word:"leap",meaning:"[동/명] 뛰다, 도약",pos:"v/n",syn:"jump",ant:"fall",ex:"The frog leaped from the rock into the water.",exKr:"개구리가 바위에서 물속으로 뛰어들었다."},
+{id:244,word:"survey",meaning:"[동/명] 조사하다, 설문 조사",pos:"v/n",syn:"questionnaire",ant:"—",ex:"The company conducted a customer satisfaction survey.",exKr:"회사는 고객 만족도 설문 조사를 실시했다."},
+{id:245,word:"typical",meaning:"[형] 전형적인, 대표적인",pos:"adj",syn:"standard",ant:"unusual",ex:"A typical workday starts at nine in the morning.",exKr:"전형적인 근무일은 아침 9시에 시작된다."},
+{id:246,word:"mere",meaning:"[형] 단지 ~에 불과한",pos:"adj",syn:"only",ant:"significant",ex:"It was a mere misunderstanding between them.",exKr:"그것은 그들 사이의 단순한 오해였다."},
+{id:247,word:"mechanic",meaning:"[명] 기계공",pos:"n",syn:"technician",ant:"—",ex:"The mechanic fixed the car in two hours.",exKr:"기계공이 2시간 만에 차를 고쳤다."},
+{id:248,word:"mood",meaning:"[명] 분위기, 기분",pos:"n",syn:"atmosphere",ant:"—",ex:"Music can greatly affect your mood.",exKr:"음악은 기분에 큰 영향을 줄 수 있다."},
+{id:249,word:"approve",meaning:"[동] 승인하다, 찬성하다",pos:"v",syn:"accept",ant:"reject",ex:"The board approved the new budget proposal.",exKr:"이사회가 새 예산 제안을 승인했다."},
+{id:250,word:"rural",meaning:"[형] 시골의",pos:"adj",syn:"countryside",ant:"urban",ex:"Life in rural areas is peaceful and quiet.",exKr:"시골 지역의 생활은 평화롭고 조용하다."},
+{id:251,word:"finance",meaning:"[명/동] 재정, 자금을 조달하다",pos:"n/v",syn:"fund",ant:"—",ex:"She studied finance at business school.",exKr:"그녀는 경영 대학원에서 재무를 공부했다."},
+{id:252,word:"seek",meaning:"[동] 찾다, 추구하다",pos:"v",syn:"search",ant:"avoid",ex:"He sought advice from his mentor.",exKr:"그는 멘토에게 조언을 구했다."},
+{id:253,word:"operation",meaning:"[명] 작업, 운영, 수술",pos:"n",syn:"procedure",ant:"—",ex:"The hospital completed over a thousand operations last year.",exKr:"병원은 작년에 천 번 이상의 수술을 완료했다."},
+{id:254,word:"crime",meaning:"[명] 범죄",pos:"n",syn:"offense",ant:"law",ex:"The city saw a decrease in violent crime.",exKr:"도시에서 폭력 범죄가 감소했다."},
+{id:255,word:"awful",meaning:"[형] 끔찍한, 지독한",pos:"adj",syn:"terrible",ant:"wonderful",ex:"The smell coming from the trash was awful.",exKr:"쓰레기통에서 나는 냄새는 끔찍했다."},
+{id:256,word:"series",meaning:"[명] 연속, 시리즈물",pos:"n",syn:"sequence",ant:"—",ex:"She watched the whole series in one weekend.",exKr:"그녀는 한 주말에 시리즈 전체를 봤다."},
+{id:257,word:"exhausted",meaning:"[형] 고갈된, 기진맥진한",pos:"adj",syn:"tired",ant:"energized",ex:"After the marathon, she was completely exhausted.",exKr:"마라톤 후 그녀는 완전히 기진맥진했다."},
+{id:258,word:"absolute",meaning:"[형] 완전한, 절대적인",pos:"adj",syn:"complete",ant:"partial",ex:"The silence in the library was absolute.",exKr:"도서관의 침묵은 완전했다."},
+{id:259,word:"surround",meaning:"[동] 둘러싸다",pos:"v",syn:"encircle",ant:"expose",ex:"Mountains surround the small valley town.",exKr:"산들이 작은 계곡 마을을 둘러싸고 있다."},
+{id:260,word:"display",meaning:"[동/명] 전시하다, 전시",pos:"v/n",syn:"show",ant:"hide",ex:"The museum displays artifacts from ancient times.",exKr:"박물관은 고대의 유물을 전시한다."},
+{id:261,word:"policy",meaning:"[명] 정책, 수단",pos:"n",syn:"rule",ant:"—",ex:"The new company policy bans personal phone use.",exKr:"새 회사 정책은 개인 전화 사용을 금지한다."},
+{id:262,word:"mass",meaning:"[명] 덩어리, 집단",pos:"n",syn:"bulk",ant:"individual",ex:"A mass of people gathered in the square.",exKr:"많은 사람들이 광장에 모였다."},
+{id:263,word:"committee",meaning:"[명] 위원회",pos:"n",syn:"panel",ant:"individual",ex:"The committee reviewed the new proposal carefully.",exKr:"위원회는 새 제안을 주의 깊게 검토했다."},
+{id:264,word:"accurate",meaning:"[형] 정확한",pos:"adj",syn:"precise",ant:"inaccurate",ex:"Make sure all your data is accurate.",exKr:"모든 데이터가 정확한지 확인하세요."},
+{id:265,word:"arrange",meaning:"[동] 정리하다, 준비하다",pos:"v",syn:"organize",ant:"mess",ex:"Please arrange the chairs before the guests arrive.",exKr:"손님이 도착하기 전에 의자를 정리해 주세요."},
+{id:266,word:"facility",meaning:"[명] 시설, 편의",pos:"n",syn:"amenity",ant:"—",ex:"The hotel has excellent sports facilities.",exKr:"호텔은 훌륭한 스포츠 시설을 갖추고 있다."},
+{id:267,word:"consult",meaning:"[동] 상담하다, 참고하다",pos:"v",syn:"advise",ant:"ignore",ex:"Always consult a doctor before taking medication.",exKr:"약을 복용하기 전에 항상 의사와 상담하세요."},
+{id:268,word:"refer",meaning:"[동] 언급하다, 위탁하다",pos:"v",syn:"mention",ant:"—",ex:"She referred to the report during her speech.",exKr:"그녀는 연설 중 보고서를 언급했다."},
+{id:269,word:"attach",meaning:"[동] 붙이다, 첨부하다",pos:"v",syn:"connect",ant:"detach",ex:"Please attach your resume to the email.",exKr:"이메일에 이력서를 첨부해 주세요."},
+{id:270,word:"recover",meaning:"[동] 회복하다, 되찾다",pos:"v",syn:"heal",ant:"worsen",ex:"She recovered quickly after the surgery.",exKr:"그녀는 수술 후 빠르게 회복했다."},
+{id:271,word:"reward",meaning:"[명/동] 보상, 보답하다",pos:"n/v",syn:"prize",ant:"penalty",ex:"Hard work is always rewarded in the end.",exKr:"노력은 결국 항상 보상을 받는다."},
+{id:272,word:"enormous",meaning:"[형] 엄청난, 거대한",pos:"adj",syn:"huge",ant:"tiny",ex:"The project required an enormous amount of work.",exKr:"프로젝트는 엄청난 양의 작업을 필요로 했다."},
+{id:273,word:"domestic",meaning:"[형] 국내의, 가정의",pos:"adj",syn:"local",ant:"international",ex:"Domestic flights are cheaper than international ones.",exKr:"국내선 항공편이 국제선보다 저렴하다."},
+{id:274,word:"wealth",meaning:"[명] 부, 재산",pos:"n",syn:"riches",ant:"poverty",ex:"Good health is more important than wealth.",exKr:"좋은 건강이 부보다 더 중요하다."},
+{id:275,word:"elementary",meaning:"[형] 초보의, 기초적인",pos:"adj",syn:"basic",ant:"advanced",ex:"She teaches elementary school in the city.",exKr:"그녀는 도시의 초등학교에서 가르친다."},
+{id:276,word:"gap",meaning:"[명] 격차, 틈",pos:"n",syn:"difference",ant:"—",ex:"There is a large gap between rich and poor.",exKr:"부자와 가난한 사람 사이에 큰 격차가 있다."},
+{id:277,word:"except",meaning:"[전/동] ~을 제외하고, 제외하다",pos:"prep/v",syn:"besides",ant:"include",ex:"Everyone attended the meeting except John.",exKr:"John을 제외한 모든 사람이 회의에 참석했다."},
+{id:278,word:"journey",meaning:"[명] 여행",pos:"n",syn:"trip",ant:"—",ex:"The journey from Seoul to Busan takes three hours.",exKr:"서울에서 부산까지의 여행은 세 시간이 걸린다."},
+{id:279,word:"plain",meaning:"[형] 평범한, 명백한",pos:"adj",syn:"simple",ant:"fancy",ex:"She preferred plain food without too many spices.",exKr:"그녀는 양념이 많지 않은 평범한 음식을 선호했다."},
+{id:280,word:"downtown",meaning:"[명/형/부] 도심, 도심의, 도심지에서",pos:"n/adj/adv",syn:"city center",ant:"suburb",ex:"She works downtown and commutes every day.",exKr:"그녀는 도심에서 일하며 매일 통근한다."},
+{id:281,word:"previous",meaning:"[형] 이전의, 앞의",pos:"adj",syn:"former",ant:"next",ex:"Please review the previous chapter before class.",exKr:"수업 전에 이전 챕터를 복습해 주세요."},
+{id:282,word:"produce",meaning:"[동] 생산하다, 제조하다",pos:"v",syn:"create",ant:"consume",ex:"The factory produces over a thousand cars daily.",exKr:"공장은 매일 천 대 이상의 차를 생산한다."},
+{id:283,word:"remain",meaning:"[동] 여전히 ~이다, 남다",pos:"v",syn:"stay",ant:"leave",ex:"Please remain seated until the plane stops.",exKr:"비행기가 멈출 때까지 자리에 앉아 계세요."},
+{id:284,word:"break",meaning:"[동/명] 깨다, 고장내다",pos:"v/n",syn:"shatter",ant:"fix",ex:"Be careful not to break the glass.",exKr:"유리를 깨지 않도록 조심하세요."},
+{id:285,word:"slight",meaning:"[형] 약간의, 경미한",pos:"adj",syn:"minor",ant:"significant",ex:"There was only a slight delay in the schedule.",exKr:"일정에 약간의 지연이 있었을 뿐이다."},
+{id:286,word:"include",meaning:"[동] 포함하다",pos:"v",syn:"contain",ant:"exclude",ex:"The price includes breakfast and dinner.",exKr:"가격에는 아침과 저녁이 포함되어 있다."},
+{id:287,word:"delay",meaning:"[동/명] 연기하다, 지연",pos:"v/n",syn:"postpone",ant:"advance",ex:"The flight was delayed due to bad weather.",exKr:"항공편이 악천후로 인해 지연되었다."},
+{id:288,word:"file",meaning:"[명/동] 서류철, 파일에 철하다",pos:"n/v",syn:"document",ant:"—",ex:"Please file the reports in alphabetical order.",exKr:"보고서를 알파벳 순서로 정리해 주세요."},
+{id:289,word:"ethic",meaning:"[명] 윤리",pos:"n",syn:"morality",ant:"immorality",ex:"Business ethics are essential in today\'s world.",exKr:"비즈니스 윤리는 오늘날 세계에서 필수적이다."},
+{id:290,word:"instant",meaning:"[형/명] 즉각의, 순간",pos:"adj/n",syn:"immediate",ant:"delayed",ex:"She felt instant relief after taking the medicine.",exKr:"약을 복용한 후 즉각적인 안도를 느꼈다."},
+{id:291,word:"reveal",meaning:"[동] 폭로하다, 드러내다",pos:"v",syn:"expose",ant:"hide",ex:"The investigation revealed the truth.",exKr:"조사가 진실을 드러냈다."},
+{id:292,word:"breed",meaning:"[동] 낳다, 양육하다",pos:"v",syn:"raise",ant:"—",ex:"She breeds horses on her farm.",exKr:"그녀는 농장에서 말을 키운다."},
+{id:293,word:"leisure",meaning:"[명/형] 여가, 한가한",pos:"n/adj",syn:"free time",ant:"work",ex:"She spends her leisure time reading books.",exKr:"그녀는 여가 시간에 책을 읽는다."},
+{id:294,word:"urban",meaning:"[형] 도시의",pos:"adj",syn:"city",ant:"rural",ex:"Urban areas tend to have higher living costs.",exKr:"도시 지역은 생활비가 더 높은 경향이 있다."},
+{id:295,word:"witness",meaning:"[명/동] 목격자, 목격하다",pos:"n/v",syn:"observer",ant:"—",ex:"Several witnesses saw the accident happen.",exKr:"몇몇 목격자들이 사고 발생을 목격했다."},
+{id:296,word:"admit",meaning:"[동] 인정하다, 입학을 허가하다",pos:"v",syn:"acknowledge",ant:"deny",ex:"He admitted making a mistake in his report.",exKr:"그는 보고서에서 실수를 인정했다."},
+{id:297,word:"muscle",meaning:"[명] 근육, 힘",pos:"n",syn:"strength",ant:"weakness",ex:"Exercise helps build strong muscles.",exKr:"운동은 강한 근육을 만드는 데 도움이 된다."},
+{id:298,word:"device",meaning:"[명] 장치, 고안, 방책",pos:"n",syn:"tool",ant:"—",ex:"She uses a wearable device to track her health.",exKr:"그녀는 건강을 추적하기 위해 웨어러블 장치를 사용한다."},
+{id:299,word:"suppose",meaning:"[동] 추측하다, 가정하다",pos:"v",syn:"assume",ant:"know",ex:"Suppose we take a different route home.",exKr:"집으로 가는 다른 경로를 택한다고 가정해 봅시다."},
+{id:300,word:"owe",meaning:"[동] 빚지고 있다",pos:"v",syn:"be indebted",ant:"—",ex:"She owes the bank a large sum of money.",exKr:"그녀는 은행에 많은 돈을 빚지고 있다."},
+{id:301,word:"intend",meaning:"[동] ~할 작정이다, 의도하다",pos:"v",syn:"plan",ant:"—",ex:"I intend to finish this project by next week.",exKr:"나는 다음 주까지 이 프로젝트를 끝낼 작정이다."},
+{id:302,word:"aspect",meaning:"[명] 면, 관점",pos:"n",syn:"perspective",ant:"—",ex:"Every aspect of the plan was carefully reviewed.",exKr:"계획의 모든 면이 주의 깊게 검토되었다."},
+{id:303,word:"potential",meaning:"[형/명] 잠재적인, 잠재력",pos:"adj/n",syn:"possible",ant:"definite",ex:"She has the potential to become a great leader.",exKr:"그녀는 훌륭한 리더가 될 잠재력이 있다."},
+{id:304,word:"award",meaning:"[명/동] 상, 수여하다",pos:"n/v",syn:"prize",ant:"—",ex:"She was awarded best employee of the year.",exKr:"그녀는 올해의 최고 직원으로 수상했다."},
+{id:305,word:"preserve",meaning:"[동] 보존하다, 보호하다",pos:"v",syn:"protect",ant:"destroy",ex:"We must preserve the natural environment.",exKr:"우리는 자연환경을 보존해야 한다."},
+{id:306,word:"spot",meaning:"[명/동] 장소, 발견하다",pos:"n/v",syn:"location",ant:"miss",ex:"She spotted a rare bird in the forest.",exKr:"그녀는 숲에서 희귀한 새를 발견했다."},
+{id:307,word:"underground",meaning:"[형/명] 지하의, 지하",pos:"adj/n",syn:"subway",ant:"surface",ex:"The city has an extensive underground rail network.",exKr:"도시는 광범위한 지하 철도 네트워크를 갖추고 있다."},
+{id:308,word:"consequence",meaning:"[명] 결과, 중요성",pos:"n",syn:"outcome",ant:"cause",ex:"Ignoring safety rules has serious consequences.",exKr:"안전 규칙을 무시하면 심각한 결과가 생긴다."},
+{id:309,word:"target",meaning:"[명/동] 목표, 목표로 삼다",pos:"n/v",syn:"goal",ant:"—",ex:"The sales team exceeded their monthly target.",exKr:"영업팀은 월간 목표를 초과 달성했다."},
+{id:310,word:"unless",meaning:"[접] 만약 ~이 아니면",pos:"conj",syn:"if not",ant:"—",ex:"You won\'t succeed unless you work hard.",exKr:"열심히 일하지 않으면 성공할 수 없다."},
+{id:311,word:"accomplish",meaning:"[동] 이루다, 성취하다",pos:"v",syn:"achieve",ant:"fail",ex:"She accomplished all her goals this year.",exKr:"그녀는 올해 모든 목표를 달성했다."},
+{id:312,word:"adopt",meaning:"[동] 입양하다, 채택하다",pos:"v",syn:"accept",ant:"reject",ex:"The committee adopted the new proposal.",exKr:"위원회가 새 제안을 채택했다."},
+{id:313,word:"unique",meaning:"[형] 독특한, 유일한",pos:"adj",syn:"one-of-a-kind",ant:"common",ex:"Each person has a unique set of fingerprints.",exKr:"각 사람은 고유한 지문을 가지고 있다."},
+{id:314,word:"slip",meaning:"[동/명] 미끄러지다, 실수하다",pos:"v/n",syn:"slide",ant:"grip",ex:"She slipped on the wet floor and fell.",exKr:"그녀는 젖은 바닥에서 미끄러져 넘어졌다."},
+{id:315,word:"civilization",meaning:"[명] 문명",pos:"n",syn:"culture",ant:"barbarism",ex:"Ancient Egyptian civilization was highly advanced.",exKr:"고대 이집트 문명은 매우 발전해 있었다."},
+{id:316,word:"row",meaning:"[명/동] 열, 줄, 배를 젓다",pos:"n/v",syn:"line",ant:"—",ex:"Please sit in the front row for the show.",exKr:"공연을 위해 앞줄에 앉아 주세요."},
+{id:317,word:"horizon",meaning:"[명] 지평선",pos:"n",syn:"skyline",ant:"—",ex:"The sun set beautifully on the horizon.",exKr:"태양이 지평선에 아름답게 졌다."},
+{id:318,word:"atmosphere",meaning:"[명] 대기, 분위기",pos:"n",syn:"ambiance",ant:"—",ex:"The restaurant has a warm and cozy atmosphere.",exKr:"그 레스토랑은 따뜻하고 아늑한 분위기를 가지고 있다."},
+{id:319,word:"label",meaning:"[명/동] 꼬리표, 라벨을 붙이다",pos:"n/v",syn:"tag",ant:"—",ex:"Read the label before using this product.",exKr:"이 제품을 사용하기 전에 라벨을 읽으세요."},
+{id:320,word:"decorate",meaning:"[동] 장식하다",pos:"v",syn:"adorn",ant:"strip",ex:"She decorated her room with plants and paintings.",exKr:"그녀는 식물과 그림으로 방을 장식했다."},
+{id:321,word:"identify",meaning:"[동] ~임을 확인하다, 식별하다",pos:"v",syn:"recognize",ant:"confuse",ex:"Can you identify the person in this photo?",exKr:"이 사진 속 인물을 식별할 수 있나요?"},
+{id:322,word:"standard",meaning:"[명/형] 표준, 표준의",pos:"n/adj",syn:"norm",ant:"exception",ex:"Our products meet international quality standards.",exKr:"우리 제품은 국제 품질 기준을 충족한다."},
+{id:323,word:"scale",meaning:"[명] 규모, 저울, 비늘",pos:"n",syn:"size",ant:"—",ex:"The project is being done on a large scale.",exKr:"프로젝트는 대규모로 진행되고 있다."},
+{id:324,word:"evident",meaning:"[형] 명백한",pos:"adj",syn:"obvious",ant:"unclear",ex:"It was evident that she was very talented.",exKr:"그녀가 매우 재능이 있다는 것이 명백했다."},
+{id:325,word:"seldom",meaning:"[부] 거의 ~않는",pos:"adv",syn:"rarely",ant:"often",ex:"She seldom eats fast food anymore.",exKr:"그녀는 더 이상 패스트푸드를 거의 먹지 않는다."},
+{id:326,word:"secretary",meaning:"[명] 비서, 장관",pos:"n",syn:"assistant",ant:"—",ex:"The secretary scheduled all the meetings.",exKr:"비서가 모든 회의를 예약했다."},
+{id:327,word:"basis",meaning:"[명] 원리, 기초",pos:"n",syn:"foundation",ant:"—",ex:"Trust is the basis of any good relationship.",exKr:"신뢰는 좋은 관계의 기초이다."},
+{id:328,word:"automatic",meaning:"[형] 자동적인, 기계적인",pos:"adj",syn:"self-operating",ant:"manual",ex:"The doors are automatic and open by themselves.",exKr:"문은 자동이라 혼자 열린다."},
+{id:329,word:"region",meaning:"[명] 지역",pos:"n",syn:"area",ant:"—",ex:"The northern region experienced heavy snowfall.",exKr:"북부 지역에 폭설이 내렸다."},
+{id:330,word:"rise",meaning:"[동/명] 일어나다, 오르다, 상승",pos:"v/n",syn:"increase",ant:"fall",ex:"House prices continue to rise every year.",exKr:"집값이 매년 계속 오르고 있다."},
+{id:331,word:"addict",meaning:"[동/명] 중독시키다, 중독자",pos:"v/n",syn:"hook",ant:"recover",ex:"He became addicted to social media.",exKr:"그는 소셜 미디어에 중독되었다."},
+{id:332,word:"disappoint",meaning:"[동] 실망시키다",pos:"v",syn:"let down",ant:"satisfy",ex:"The poor result disappointed the whole team.",exKr:"형편없는 결과가 팀 전체를 실망시켰다."},
+{id:333,word:"artificial",meaning:"[형] 인공적인, 인조의",pos:"adj",syn:"synthetic",ant:"natural",ex:"Artificial intelligence is reshaping many industries.",exKr:"인공 지능은 많은 산업을 재편하고 있다."},
+{id:334,word:"possess",meaning:"[동] 소유하다",pos:"v",syn:"own",ant:"lack",ex:"He possesses great communication skills.",exKr:"그는 훌륭한 의사소통 능력을 가지고 있다."},
+{id:335,word:"substance",meaning:"[명] 물질, 본질, 실체",pos:"n",syn:"material",ant:"—",ex:"The unknown substance was sent to the lab.",exKr:"알 수 없는 물질이 실험실로 보내졌다."},
+{id:336,word:"realistic",meaning:"[형] 현실적인, 현실주의의",pos:"adj",syn:"practical",ant:"idealistic",ex:"Set realistic goals that you can actually achieve.",exKr:"실제로 달성할 수 있는 현실적인 목표를 설정하세요."},
+{id:337,word:"encounter",meaning:"[동/명] 우연히 만나다, 마주침",pos:"v/n",syn:"meet",ant:"avoid",ex:"She encountered an old friend at the airport.",exKr:"그녀는 공항에서 옛 친구를 우연히 만났다."},
+{id:338,word:"differ",meaning:"[동] 다르다, 의견을 달리하다",pos:"v",syn:"vary",ant:"agree",ex:"Our opinions differ on this topic.",exKr:"이 주제에 대해 우리의 의견이 다르다."},
+{id:339,word:"principle",meaning:"[명] 원칙, 원리",pos:"n",syn:"rule",ant:"exception",ex:"She always acts according to her principles.",exKr:"그녀는 항상 자신의 원칙에 따라 행동한다."},
+{id:340,word:"memorize",meaning:"[동] 기억하다",pos:"v",syn:"remember",ant:"forget",ex:"Students are required to memorize the vocabulary.",exKr:"학생들은 어휘를 암기해야 한다."},
+{id:341,word:"physics",meaning:"[명] 물리학",pos:"n",syn:"natural science",ant:"—",ex:"He has a degree in physics from a top university.",exKr:"그는 명문 대학에서 물리학 학위를 받았다."},
+{id:342,word:"evaluate",meaning:"[동] 평가하다",pos:"v",syn:"assess",ant:"ignore",ex:"Teachers evaluate student performance regularly.",exKr:"교사들은 학생 성취도를 정기적으로 평가한다."},
+{id:343,word:"tremendous",meaning:"[형] 굉장한, 무시무시한",pos:"adj",syn:"enormous",ant:"minor",ex:"She made a tremendous effort to finish on time.",exKr:"그녀는 제때 끝내기 위해 엄청난 노력을 했다."},
+{id:344,word:"application",meaning:"[명] 적용, 신청",pos:"n",syn:"request",ant:"—",ex:"She submitted an application for the scholarship.",exKr:"그녀는 장학금 신청서를 제출했다."},
+{id:345,word:"vote",meaning:"[명/동] 투표, 투표하다",pos:"n/v",syn:"ballot",ant:"—",ex:"Every citizen has the right to vote.",exKr:"모든 시민은 투표할 권리가 있다."},
+{id:346,word:"spread",meaning:"[명/동] 퍼짐, 펼치다, 퍼지다",pos:"v/n",syn:"expand",ant:"contain",ex:"News spreads quickly through social media.",exKr:"소식은 소셜 미디어를 통해 빠르게 퍼진다."},
+{id:347,word:"impact",meaning:"[명/동] 충격, 영향, 충격을 주다",pos:"n/v",syn:"effect",ant:"—",ex:"The new law had a big impact on businesses.",exKr:"새 법은 기업에 큰 영향을 미쳤다."},
+{id:348,word:"cooperate",meaning:"[동] 협력하다",pos:"v",syn:"collaborate",ant:"compete",ex:"Countries must cooperate to fight climate change.",exKr:"국가들은 기후 변화에 맞서기 위해 협력해야 한다."},
+{id:349,word:"emit",meaning:"[동] 방출하다",pos:"v",syn:"release",ant:"absorb",ex:"Cars emit harmful gases into the atmosphere.",exKr:"자동차는 대기 중으로 유해 가스를 방출한다."},
+{id:350,word:"request",meaning:"[명/동] 요청, 요청하다",pos:"n/v",syn:"ask",ant:"demand",ex:"She made a formal request for more information.",exKr:"그녀는 더 많은 정보를 위한 공식 요청을 했다."},
+{id:351,word:"guarantee",meaning:"[동/명] 보장하다, 보증",pos:"v/n",syn:"ensure",ant:"doubt",ex:"We guarantee full satisfaction or your money back.",exKr:"완전한 만족을 보장하거나 환불해 드립니다."},
+{id:352,word:"resist",meaning:"[동] 저항하다",pos:"v",syn:"oppose",ant:"submit",ex:"It is hard to resist eating sweets.",exKr:"단것을 먹는 것을 참기 어렵다."},
+{id:353,word:"fulfill",meaning:"[동] 달성하다, 이행하다",pos:"v",syn:"achieve",ant:"fail",ex:"She fulfilled all the requirements for graduation.",exKr:"그녀는 졸업을 위한 모든 요건을 충족했다."},
+{id:354,word:"stink",meaning:"[동] 역겹다, 악취를 풍기다",pos:"v",syn:"smell bad",ant:"—",ex:"The garbage began to stink in the summer heat.",exKr:"여름 더위에 쓰레기가 악취를 풍기기 시작했다."},
+{id:355,word:"grant",meaning:"[동] 수여하다, 승인하다",pos:"v",syn:"award",ant:"deny",ex:"The government granted funding to the project.",exKr:"정부는 프로젝트에 자금을 지원했다."},
+{id:356,word:"rely",meaning:"[동] 의지하다, 믿다",pos:"v",syn:"depend",ant:"—",ex:"You can always rely on her for support.",exKr:"그녀의 지원은 항상 믿을 수 있다."},
+{id:357,word:"permanent",meaning:"[형] 영원한, 영구적인",pos:"adj",syn:"lasting",ant:"temporary",ex:"She is looking for a permanent job position.",exKr:"그녀는 영구적인 직위를 찾고 있다."},
+{id:358,word:"emergency",meaning:"[명] 비상 사태",pos:"n",syn:"crisis",ant:"routine",ex:"Call the emergency number if someone is injured.",exKr:"누가 다치면 응급 번호에 전화하세요."},
+{id:359,word:"rid",meaning:"[동] 제거하다",pos:"v",syn:"remove",ant:"keep",ex:"We need to get rid of this old furniture.",exKr:"이 오래된 가구를 없애야 한다."},
+{id:360,word:"theme",meaning:"[명] 주제, 화제",pos:"n",syn:"topic",ant:"—",ex:"The theme of the party was tropical summer.",exKr:"파티의 주제는 열대 여름이었다."},
+{id:361,word:"hesitate",meaning:"[동] 주저하다, 망설이다",pos:"v",syn:"pause",ant:"decide",ex:"Don\'t hesitate to contact us with any questions.",exKr:"질문이 있으면 주저하지 말고 연락해 주세요."},
+{id:362,word:"location",meaning:"[명] 위치, 장소",pos:"n",syn:"place",ant:"—",ex:"The hotel\'s location is perfect for sightseeing.",exKr:"호텔의 위치는 관광에 완벽하다."},
+{id:363,word:"restrict",meaning:"[동] 제한하다, 한정하다",pos:"v",syn:"limit",ant:"allow",ex:"Speed is restricted to thirty mph in this zone.",exKr:"이 구역에서는 속도가 시속 30마일로 제한된다."},
+{id:364,word:"organism",meaning:"[명] 유기체, 생물",pos:"n",syn:"living being",ant:"—",ex:"A single bacterium is the simplest organism.",exKr:"단일 박테리아는 가장 단순한 유기체이다."},
+{id:365,word:"resolve",meaning:"[동] 해결하다, 결심하다",pos:"v",syn:"solve",ant:"create",ex:"They resolved the conflict through negotiation.",exKr:"그들은 협상을 통해 갈등을 해결했다."},
+{id:366,word:"offer",meaning:"[동] 제공하다, 제안하다",pos:"v",syn:"provide",ant:"withdraw",ex:"She offered to help with the project.",exKr:"그녀는 프로젝트를 돕겠다고 제안했다."},
+{id:367,word:"distribute",meaning:"[동] 분배하다, 분포시키다",pos:"v",syn:"hand out",ant:"collect",ex:"Volunteers distributed food to the homeless.",exKr:"자원봉사자들이 노숙자들에게 음식을 나눠줬다."},
+{id:368,word:"rainforest",meaning:"[명] 열대우림",pos:"n",syn:"jungle",ant:"desert",ex:"Many species live in the Amazon rainforest.",exKr:"많은 종들이 아마존 열대우림에 살고 있다."},
+{id:369,word:"circumstance",meaning:"[명] 상황, 환경",pos:"n",syn:"situation",ant:"—",ex:"The circumstances forced her to make a quick decision.",exKr:"상황이 그녀로 하여금 빠른 결정을 내리게 했다."},
+{id:370,word:"interpret",meaning:"[동] 해석하다, 통역하다",pos:"v",syn:"explain",ant:"misunderstand",ex:"The data can be interpreted in different ways.",exKr:"데이터는 다양한 방식으로 해석될 수 있다."},
+{id:371,word:"suitable",meaning:"[형] 적절한, 적합한",pos:"adj",syn:"appropriate",ant:"unsuitable",ex:"This movie is not suitable for young children.",exKr:"이 영화는 어린 아이들에게 적합하지 않다."},
+{id:372,word:"curve",meaning:"[명] 곡선, 속임수",pos:"n",syn:"bend",ant:"straight line",ex:"The road has a sharp curve ahead.",exKr:"도로 앞에 급커브가 있다."},
+{id:373,word:"annoy",meaning:"[동] 괴롭히다, 귀찮게 하다",pos:"v",syn:"bother",ant:"please",ex:"Loud music late at night annoys the neighbors.",exKr:"밤 늦게 큰 음악은 이웃들을 성가시게 한다."},
+{id:374,word:"frighten",meaning:"[동] 겁먹게 하다",pos:"v",syn:"scare",ant:"calm",ex:"The loud noise frightened the cat.",exKr:"큰 소음이 고양이를 겁먹게 했다."},
+{id:375,word:"estimate",meaning:"[동/명] 평가하다, 견적, 평가",pos:"v/n",syn:"calculate",ant:"—",ex:"The contractor gave us a cost estimate.",exKr:"도급업자가 우리에게 비용 견적을 제시했다."},
+{id:376,word:"refuse",meaning:"[동] 거절하다",pos:"v",syn:"decline",ant:"accept",ex:"She refused to sign the unfair contract.",exKr:"그녀는 불공정한 계약에 서명하기를 거부했다."},
+{id:377,word:"adventure",meaning:"[명] 모험",pos:"n",syn:"journey",ant:"routine",ex:"The camping trip was a great adventure.",exKr:"캠핑 여행은 멋진 모험이었다."},
+{id:378,word:"entrance",meaning:"[명] 입구, 입장",pos:"n",syn:"entry",ant:"exit",ex:"Please use the back entrance after hours.",exKr:"영업 시간 이후에는 뒷문을 이용해 주세요."},
+{id:379,word:"persuade",meaning:"[동] 설득하다",pos:"v",syn:"convince",ant:"dissuade",ex:"She persuaded her parents to let her study abroad.",exKr:"그녀는 해외 유학을 허락해 달라고 부모님을 설득했다."},
+{id:380,word:"perceive",meaning:"[동] 인지하다, 인식하다",pos:"v",syn:"recognize",ant:"miss",ex:"He perceived a change in her behavior.",exKr:"그는 그녀의 행동 변화를 인식했다."},
+{id:381,word:"recite",meaning:"[동] 암송하다",pos:"v",syn:"memorize",ant:"forget",ex:"She recited the poem perfectly in class.",exKr:"그녀는 수업에서 시를 완벽하게 암송했다."},
+{id:382,word:"gather",meaning:"[동] 모으다",pos:"v",syn:"collect",ant:"scatter",ex:"People gathered in the park to watch the concert.",exKr:"사람들이 콘서트를 보기 위해 공원에 모였다."},
+{id:383,word:"cabin",meaning:"[명] 객실, 선실, 오두막집",pos:"n",syn:"hut",ant:"—",ex:"They stayed in a small cabin in the mountains.",exKr:"그들은 산속의 작은 오두막에서 머물렀다."},
+{id:384,word:"gear",meaning:"[명] 장비, 기어",pos:"n",syn:"equipment",ant:"—",ex:"Always wear proper safety gear in the lab.",exKr:"실험실에서는 항상 적절한 안전 장비를 착용하세요."},
+{id:385,word:"ray",meaning:"[명] 광선",pos:"n",syn:"beam",ant:"—",ex:"A ray of sunlight entered through the window.",exKr:"창문을 통해 햇빛 한 줄기가 들어왔다."},
+{id:386,word:"release",meaning:"[동/명] 놓아주다, 방출하다, 석방",pos:"v/n",syn:"free",ant:"capture",ex:"The new album will be released next month.",exKr:"새 앨범이 다음 달에 발매될 것이다."},
+{id:387,word:"rank",meaning:"[명/동] 지위, 계급, 매기다",pos:"n/v",syn:"position",ant:"—",ex:"She ranked first in the national competition.",exKr:"그녀는 전국 대회에서 1위를 차지했다."},
+{id:388,word:"symphony",meaning:"[명] 교향곡",pos:"n",syn:"orchestral piece",ant:"—",ex:"Beethoven\'s ninth symphony is world-famous.",exKr:"베토벤의 9번 교향곡은 세계적으로 유명하다."},
+{id:389,word:"envy",meaning:"[동/명] 부러워하다, 부러움",pos:"v/n",syn:"jealousy",ant:"admiration",ex:"She envied her friend\'s success in business.",exKr:"그녀는 사업에서의 친구의 성공을 부러워했다."},
+{id:390,word:"corporate",meaning:"[형] 회사의, 법인의",pos:"adj",syn:"business",ant:"individual",ex:"The corporate headquarters is in New York.",exKr:"본사는 뉴욕에 있다."},
+{id:391,word:"alternative",meaning:"[명/형] 대안, 대안의",pos:"n/adj",syn:"option",ant:"—",ex:"We should consider an alternative solution.",exKr:"우리는 대안적인 해결책을 고려해야 한다."},
+{id:392,word:"retire",meaning:"[동] 은퇴하다",pos:"v",syn:"quit",ant:"start",ex:"He retired after thirty years with the company.",exKr:"그는 회사에서 30년 근무 후 은퇴했다."},
+{id:393,word:"appeal",meaning:"[동/명] 호소하다, 호소, 항의",pos:"v/n",syn:"attract",ant:"repel",ex:"The charity campaign appealed to many donors.",exKr:"자선 캠페인이 많은 기부자들의 마음을 끌었다."},
+{id:394,word:"identical",meaning:"[형] 동일한, 일란성의",pos:"adj",syn:"same",ant:"different",ex:"The two signatures were almost identical.",exKr:"두 서명은 거의 동일했다."},
+{id:395,word:"investment",meaning:"[명] 투자",pos:"n",syn:"capital",ant:"—",ex:"The company made a large investment in new technology.",exKr:"회사는 새 기술에 대규모 투자를 했다."},
+{id:396,word:"autograph",meaning:"[명/동] 서명, 서명하다",pos:"n/v",syn:"signature",ant:"—",ex:"She got the actor\'s autograph after the show.",exKr:"그녀는 공연 후 배우의 서명을 받았다."},
+{id:397,word:"slave",meaning:"[명] 노예",pos:"n",syn:"servant",ant:"master",ex:"Millions of people were enslaved throughout history.",exKr:"수백만 명의 사람들이 역사 전반에 걸쳐 노예가 되었다."},
+{id:398,word:"harm",meaning:"[명/동] 손해, 손상, 해치다",pos:"n/v",syn:"damage",ant:"benefit",ex:"Smoking can harm your lungs seriously.",exKr:"흡연은 폐를 심각하게 해칠 수 있다."},
+{id:399,word:"authority",meaning:"[명] 권위, 당국",pos:"n",syn:"power",ant:"powerlessness",ex:"The authorities investigated the accident immediately.",exKr:"당국은 즉시 사고를 조사했다."},
+{id:400,word:"innocence",meaning:"[명] 결백, 무죄, 순진",pos:"n",syn:"purity",ant:"guilt",ex:"The lawyer proved his client\'s innocence.",exKr:"변호사는 의뢰인의 결백을 증명했다."},
+{id:401,word:"infant",meaning:"[명] 유아, 유치원생",pos:"n",syn:"baby",ant:"adult",ex:"The infant slept peacefully in the crib.",exKr:"유아가 침대에서 평화롭게 잠을 잤다."},
+{id:402,word:"calculate",meaning:"[동] 계산하다",pos:"v",syn:"compute",ant:"estimate",ex:"She calculated the total cost of the project.",exKr:"그녀는 프로젝트의 총 비용을 계산했다."},
+{id:403,word:"charity",meaning:"[명] 자선 단체",pos:"n",syn:"nonprofit",ant:"—",ex:"They donated money to a local charity.",exKr:"그들은 지역 자선단체에 돈을 기부했다."},
+{id:404,word:"receive",meaning:"[동] 받다",pos:"v",syn:"obtain",ant:"send",ex:"She received a prize for her excellent work.",exKr:"그녀는 훌륭한 작업으로 상을 받았다."},
+{id:405,word:"whereas",meaning:"[접] 그런데, ~에 반해서",pos:"conj",syn:"while",ant:"—",ex:"He likes coffee, whereas she prefers tea.",exKr:"그는 커피를 좋아하는 반면 그녀는 차를 선호한다."},
+{id:406,word:"board",meaning:"[명/동] 판자, 게시판, 타다",pos:"n/v",syn:"plank",ant:"—",ex:"Please board the aircraft from gate three.",exKr:"3번 게이트에서 항공기에 탑승해 주세요."},
+{id:407,word:"ignorant",meaning:"[형] 무지한, 무식한",pos:"adj",syn:"unaware",ant:"knowledgeable",ex:"Some people are ignorant of basic science facts.",exKr:"일부 사람들은 기본적인 과학 사실에 무지하다."},
+{id:408,word:"depend",meaning:"[동] 의존하다, ~에 달려 있다",pos:"v",syn:"rely",ant:"—",ex:"The project\'s success depends on teamwork.",exKr:"프로젝트의 성공은 팀워크에 달려 있다."},
+{id:409,word:"pure",meaning:"[형] 순수한, 깨끗한",pos:"adj",syn:"clean",ant:"contaminated",ex:"The water from the mountain spring was pure.",exKr:"산 샘에서 나오는 물은 순수했다."},
+{id:410,word:"extinct",meaning:"[형] 멸종된, 사라진",pos:"adj",syn:"died out",ant:"alive",ex:"The dodo bird became extinct centuries ago.",exKr:"도도새는 수 세기 전에 멸종했다."},
+{id:411,word:"household",meaning:"[명/형] 가정, 가정의",pos:"n/adj",syn:"family",ant:"—",ex:"These cleaning products are safe for household use.",exKr:"이 세정 제품들은 가정에서 사용하기에 안전하다."},
+{id:412,word:"chapter",meaning:"[명] 장, 시기, 사제단",pos:"n",syn:"section",ant:"—",ex:"Please read chapter three before tomorrow\'s class.",exKr:"내일 수업 전에 3장을 읽어 주세요."},
+{id:413,word:"refund",meaning:"[동/명] 환불하다, 환불금",pos:"v/n",syn:"reimburse",ant:"charge",ex:"She requested a full refund for the damaged item.",exKr:"그녀는 손상된 물품에 대한 전액 환불을 요청했다."},
+{id:414,word:"institute",meaning:"[명] 기관, 협회",pos:"n",syn:"organization",ant:"—",ex:"She works at a research institute downtown.",exKr:"그녀는 시내의 연구 기관에서 일한다."},
+{id:415,word:"lately",meaning:"[부] 최근에",pos:"adv",syn:"recently",ant:"—",ex:"Have you read any good books lately?",exKr:"최근에 좋은 책을 읽었나요?"},
+{id:416,word:"accept",meaning:"[동] 받아들이다",pos:"v",syn:"receive",ant:"refuse",ex:"She accepted the job offer with great joy.",exKr:"그녀는 매우 기쁘게 취업 제의를 받아들였다."},
+{id:417,word:"ashamed",meaning:"[형] 부끄러워하는",pos:"adj",syn:"embarrassed",ant:"proud",ex:"He was ashamed of his careless mistake.",exKr:"그는 자신의 부주의한 실수를 부끄러워했다."},
+{id:418,word:"dense",meaning:"[형] 밀집한, 짙은",pos:"adj",syn:"thick",ant:"sparse",ex:"The forest was so dense that sunlight couldn\'t enter.",exKr:"숲이 너무 빽빽해서 햇빛이 들어올 수 없었다."},
+{id:419,word:"rescue",meaning:"[동/명] 구출하다, 구출",pos:"v/n",syn:"save",ant:"abandon",ex:"Firefighters rescued three people from the building.",exKr:"소방관들이 건물에서 세 명을 구출했다."},
+{id:420,word:"continue",meaning:"[동] 계속하다",pos:"v",syn:"proceed",ant:"stop",ex:"Please continue working on the assignment.",exKr:"과제를 계속 작업해 주세요."},
+{id:421,word:"destination",meaning:"[명] 목적지",pos:"n",syn:"goal",ant:"origin",ex:"Paris is a popular tourist destination in Europe.",exKr:"파리는 유럽의 인기 있는 관광지이다."},
+{id:422,word:"expand",meaning:"[동] 확장되다, 확장시키다",pos:"v",syn:"grow",ant:"shrink",ex:"The company plans to expand into new markets.",exKr:"회사는 새로운 시장으로 확장할 계획이다."},
+{id:423,word:"evolution",meaning:"[명] 진화, 발전",pos:"n",syn:"development",ant:"regression",ex:"Evolution explains the diversity of life on Earth.",exKr:"진화는 지구상 생명의 다양성을 설명한다."},
+{id:424,word:"hire",meaning:"[동] 고용하다",pos:"v",syn:"employ",ant:"fire",ex:"The company decided to hire more staff.",exKr:"회사는 더 많은 직원을 고용하기로 했다."},
+{id:425,word:"isolate",meaning:"[동] 고립시키다, 격리시키다",pos:"v",syn:"separate",ant:"connect",ex:"The patient was isolated to prevent spreading infection.",exKr:"환자는 감염 확산을 막기 위해 격리되었다."},
+{id:426,word:"gravity",meaning:"[명] 중력",pos:"n",syn:"pull",ant:"levity",ex:"Gravity keeps planets in orbit around the sun.",exKr:"중력은 행성들이 태양 주위의 궤도를 유지하게 한다."},
+{id:427,word:"genuine",meaning:"[형] 진짜의, 진실된",pos:"adj",syn:"authentic",ant:"fake",ex:"She has a genuine interest in helping others.",exKr:"그녀는 다른 사람들을 돕는 데 진정한 관심을 가지고 있다."},
+{id:428,word:"statue",meaning:"[명] 조각상",pos:"n",syn:"sculpture",ant:"—",ex:"A large statue stands at the city\'s entrance.",exKr:"큰 조각상이 도시 입구에 서 있다."},
+{id:429,word:"compete",meaning:"[동] 경쟁하다",pos:"v",syn:"rival",ant:"cooperate",ex:"Athletes from fifty countries competed in the games.",exKr:"50개국의 운동선수들이 대회에서 경쟁했다."},
+{id:430,word:"military",meaning:"[형/명] 군의, 군, 군대",pos:"adj/n",syn:"armed forces",ant:"civilian",ex:"The country has a strong military force.",exKr:"그 나라는 강력한 군사력을 가지고 있다."},
+{id:431,word:"logic",meaning:"[명] 논리, 논리학",pos:"n",syn:"reasoning",ant:"—",ex:"His argument lacked basic logic.",exKr:"그의 주장은 기본적인 논리가 부족했다."},
+{id:432,word:"commit",meaning:"[동] 저지르다, 약속하다, 헌신하다",pos:"v",syn:"dedicate",ant:"neglect",ex:"She committed herself to finishing the project.",exKr:"그녀는 프로젝트를 끝내는 데 헌신했다."},
+{id:433,word:"sensible",meaning:"[형] 합리적인, 현명한",pos:"adj",syn:"reasonable",ant:"foolish",ex:"Make sensible choices when managing your money.",exKr:"돈을 관리할 때 현명한 선택을 하세요."},
+{id:434,word:"sum",meaning:"[명] 금액, 합계",pos:"n",syn:"total",ant:"—",ex:"She saved a large sum of money for her trip.",exKr:"그녀는 여행을 위해 많은 돈을 저축했다."},
+{id:435,word:"conserve",meaning:"[동] 보존하다, 보호하다",pos:"v",syn:"protect",ant:"waste",ex:"We should conserve water during dry seasons.",exKr:"건조한 계절에는 물을 절약해야 한다."},
+{id:436,word:"swing",meaning:"[동] 흔들다, 휘두르다",pos:"v",syn:"sway",ant:"steady",ex:"The child loved to swing on the playground.",exKr:"아이는 놀이터에서 그네를 타는 것을 좋아했다."},
+{id:437,word:"marriage",meaning:"[명] 결혼, 결혼 생활",pos:"n",syn:"union",ant:"divorce",ex:"Their marriage lasted over fifty years.",exKr:"그들의 결혼 생활은 50년 이상 지속되었다."},
+{id:438,word:"reproduce",meaning:"[동] 번식하다, 재생하다, 복제하다",pos:"v",syn:"multiply",ant:"—",ex:"Some animals reproduce very quickly.",exKr:"일부 동물들은 매우 빠르게 번식한다."},
+{id:439,word:"tone",meaning:"[명/동] 음조, 어조, 조화하다",pos:"n/v",syn:"manner",ant:"—",ex:"Her tone of voice was very calm and professional.",exKr:"그녀의 목소리 어조는 매우 차분하고 전문적이었다."},
+{id:440,word:"concept",meaning:"[명] 개념",pos:"n",syn:"idea",ant:"—",ex:"The concept of recycling is taught at school.",exKr:"재활용의 개념은 학교에서 가르쳐진다."},
+{id:441,word:"invitation",meaning:"[명] 초대",pos:"n",syn:"request",ant:"rejection",ex:"She received an invitation to the gala dinner.",exKr:"그녀는 갈라 디너에 초대를 받았다."},
+{id:442,word:"precise",meaning:"[형] 정확한, 정밀한",pos:"adj",syn:"exact",ant:"vague",ex:"Please give a precise answer to the question.",exKr:"질문에 정확한 답을 주세요."},
+{id:443,word:"formal",meaning:"[형] 공식적인, 격식을 차린",pos:"adj",syn:"official",ant:"casual",ex:"The meeting requires formal business attire.",exKr:"회의에는 공식적인 비즈니스 복장이 필요하다."},
+{id:444,word:"particle",meaning:"[명] 작은 조각, 입자",pos:"n",syn:"fragment",ant:"—",ex:"Dust particles floated in the sunlight.",exKr:"먼지 입자들이 햇빛 속에 떠돌았다."},
+{id:445,word:"cancel",meaning:"[동] 취소하다",pos:"v",syn:"call off",ant:"confirm",ex:"She had to cancel the appointment due to illness.",exKr:"그녀는 질병으로 인해 약속을 취소해야 했다."},
+{id:446,word:"return",meaning:"[동/명] 돌아가다, 돌려주다, 귀향",pos:"v/n",syn:"come back",ant:"depart",ex:"She plans to return to Korea next spring.",exKr:"그녀는 내년 봄에 한국으로 돌아올 계획이다."},
+{id:447,word:"departure",meaning:"[명] 출발, 떠남",pos:"n",syn:"leaving",ant:"arrival",ex:"The departure time has been moved to eight.",exKr:"출발 시간이 8시로 변경되었다."},
+{id:448,word:"apparent",meaning:"[형] 명백한",pos:"adj",syn:"obvious",ant:"unclear",ex:"It was apparent that she was very unhappy.",exKr:"그녀가 매우 불행하다는 것이 명백했다."},
+{id:449,word:"visual",meaning:"[형] 눈에 보이는, 시각의",pos:"adj",syn:"graphic",ant:"verbal",ex:"Visual aids make presentations more effective.",exKr:"시각 자료는 발표를 더 효과적으로 만든다."},
+{id:450,word:"agriculture",meaning:"[명] 농업",pos:"n",syn:"farming",ant:"industry",ex:"Agriculture employs millions of people worldwide.",exKr:"농업은 전 세계적으로 수백만 명을 고용한다."},
+{id:451,word:"rite",meaning:"[명] 의식, 의례",pos:"n",syn:"ceremony",ant:"—",ex:"The graduation ceremony is an important rite.",exKr:"졸업식은 중요한 의례이다."},
+{id:452,word:"poverty",meaning:"[명] 가난",pos:"n",syn:"hardship",ant:"wealth",ex:"Many children still live in poverty today.",exKr:"많은 아이들이 오늘날에도 가난 속에 살고 있다."},
+{id:453,word:"sculpture",meaning:"[명] 조각상",pos:"n",syn:"statue",ant:"painting",ex:"The museum has an impressive sculpture collection.",exKr:"박물관은 인상적인 조각품 컬렉션을 보유하고 있다."},
+{id:454,word:"descend",meaning:"[동] 내려가다, 내려오다",pos:"v",syn:"go down",ant:"ascend",ex:"She descended the stairs carefully with her bags.",exKr:"그녀는 가방을 들고 조심스럽게 계단을 내려갔다."},
+{id:455,word:"leak",meaning:"[동/명] 새다, 새는 구멍",pos:"v/n",syn:"drip",ant:"seal",ex:"The roof leaked badly during the storm.",exKr:"폭풍 중에 지붕에서 물이 심하게 새었다."},
+{id:456,word:"portion",meaning:"[명] 부분, 1인분",pos:"n",syn:"part",ant:"whole",ex:"She ate only a small portion of her meal.",exKr:"그녀는 식사 중 작은 부분만 먹었다."},
+{id:457,word:"companion",meaning:"[명] 친구, 동료",pos:"n",syn:"friend",ant:"enemy",ex:"He was a loyal companion throughout the journey.",exKr:"그는 여정 내내 충실한 동반자였다."},
+{id:458,word:"diligent",meaning:"[형] 근면한",pos:"adj",syn:"hardworking",ant:"lazy",ex:"She is a diligent student who never misses class.",exKr:"그녀는 수업을 한 번도 빠지지 않는 근면한 학생이다."},
+{id:459,word:"distinct",meaning:"[형] 뚜렷한, 다른",pos:"adj",syn:"clear",ant:"similar",ex:"The two paintings have very distinct styles.",exKr:"두 그림은 매우 뚜렷한 스타일을 가지고 있다."},
+{id:460,word:"component",meaning:"[명/형] 구성 요소, 구성하는",pos:"n/adj",syn:"element",ant:"whole",ex:"Teamwork is a key component of success.",exKr:"팀워크는 성공의 핵심 요소이다."},
+{id:461,word:"current",meaning:"[형] 현재의, 지금의",pos:"adj",syn:"present",ant:"past",ex:"Please read the current version of the report.",exKr:"보고서의 현재 버전을 읽어 주세요."},
+{id:462,word:"universal",meaning:"[형] 보편적인, 전 세계의",pos:"adj",syn:"global",ant:"local",ex:"Music is considered a universal language.",exKr:"음악은 보편적인 언어로 여겨진다."},
+{id:463,word:"trap",meaning:"[명/동] 덫, 가두다",pos:"n/v",syn:"snare",ant:"free",ex:"The hunters set a trap in the forest.",exKr:"사냥꾼들이 숲에 덫을 놓았다."},
+{id:464,word:"eager",meaning:"[형] 갈망하는",pos:"adj",syn:"enthusiastic",ant:"indifferent",ex:"She is eager to learn new languages.",exKr:"그녀는 새로운 언어를 배우고 싶어한다."},
+{id:465,word:"legal",meaning:"[형] 법률의, 합법적인",pos:"adj",syn:"lawful",ant:"illegal",ex:"Make sure all your actions are legal.",exKr:"모든 행동이 합법적인지 확인하세요."},
+{id:466,word:"demonstrate",meaning:"[동] 입증하다, 시위하다, 설명하다",pos:"v",syn:"prove",ant:"disprove",ex:"The experiment demonstrated the theory clearly.",exKr:"실험은 이론을 명확하게 입증했다."},
+{id:467,word:"democracy",meaning:"[명] 민주주의",pos:"n",syn:"republic",ant:"dictatorship",ex:"Democracy gives citizens the power to vote.",exKr:"민주주의는 시민들에게 투표할 권한을 준다."},
+{id:468,word:"mature",meaning:"[형/동] 성숙한, 성숙하다",pos:"adj/v",syn:"grown",ant:"immature",ex:"She became more mature after living abroad.",exKr:"해외에서 생활한 후 그녀는 더 성숙해졌다."},
+{id:469,word:"brilliant",meaning:"[형] 빛나는, 훌륭한",pos:"adj",syn:"outstanding",ant:"dull",ex:"Her performance was absolutely brilliant.",exKr:"그녀의 공연은 정말 훌륭했다."},
+{id:470,word:"annual",meaning:"[형] 연간의, 해마다의",pos:"adj",syn:"yearly",ant:"monthly",ex:"The company holds an annual review every December.",exKr:"회사는 매년 12월에 연간 검토를 실시한다."},
+{id:471,word:"faith",meaning:"[명] 믿음, 신념",pos:"n",syn:"belief",ant:"doubt",ex:"He has great faith in his team\'s ability.",exKr:"그는 팀의 능력에 대한 큰 믿음을 가지고 있다."},
+{id:472,word:"spare",meaning:"[동/형] 할애하다, 여분의",pos:"v/adj",syn:"extra",ant:"necessary",ex:"Could you spare a few minutes to help me?",exKr:"저를 도와주실 몇 분이 있나요?"},
+{id:473,word:"transfer",meaning:"[동/명] 이동하다, 환승하다, 이동",pos:"v/n",syn:"move",ant:"stay",ex:"She transferred to a new school last semester.",exKr:"그녀는 지난 학기에 새 학교로 전학했다."},
+{id:474,word:"refrigerator",meaning:"[명] 냉장고",pos:"n",syn:"fridge",ant:"—",ex:"Put the leftovers in the refrigerator.",exKr:"남은 음식은 냉장고에 넣으세요."},
+{id:475,word:"oppose",meaning:"[동] 반대하다",pos:"v",syn:"resist",ant:"support",ex:"Many citizens opposed the new highway plan.",exKr:"많은 시민들이 새 고속도로 계획에 반대했다."},
+{id:476,word:"desperate",meaning:"[형] 절망적인, 필사적인",pos:"adj",syn:"hopeless",ant:"hopeful",ex:"She made a desperate attempt to catch the bus.",exKr:"그녀는 버스를 잡으려고 필사적인 시도를 했다."},
+{id:477,word:"remote",meaning:"[형] 멀리 떨어진, 원격 조정의",pos:"adj",syn:"distant",ant:"nearby",ex:"The village is so remote that few people visit.",exKr:"그 마을은 너무 외져서 방문객이 거의 없다."},
+{id:478,word:"offend",meaning:"[동] 불쾌하게 하다",pos:"v",syn:"upset",ant:"please",ex:"His rude comment offended many people in the room.",exKr:"그의 무례한 발언이 방 안의 많은 사람들을 불쾌하게 했다."},
+{id:479,word:"awake",meaning:"[형] 깨어있는",pos:"adj",syn:"alert",ant:"asleep",ex:"She was still awake at midnight studying.",exKr:"그녀는 자정에도 공부하며 깨어 있었다."},
+{id:480,word:"aim",meaning:"[동/명] 목표로 하다, 목표",pos:"v/n",syn:"goal",ant:"—",ex:"She aims to finish her degree this year.",exKr:"그녀는 올해 학위를 마치는 것을 목표로 한다."},
+{id:481,word:"option",meaning:"[명] 선택, 선택권",pos:"n",syn:"choice",ant:"obligation",ex:"You have the option to pay monthly or annually.",exKr:"월별 또는 연간 결제 옵션이 있습니다."},
+{id:482,word:"insight",meaning:"[명] 통찰력",pos:"n",syn:"understanding",ant:"ignorance",ex:"Her insight into the problem was very helpful.",exKr:"문제에 대한 그녀의 통찰력이 매우 도움이 됐다."},
+{id:483,word:"achieve",meaning:"[동] 이루다, 성취하다",pos:"v",syn:"accomplish",ant:"fail",ex:"She achieved her goal of running a marathon.",exKr:"그녀는 마라톤 완주라는 목표를 달성했다."},
+{id:484,word:"civil",meaning:"[형] 시민의, 민간의",pos:"adj",syn:"civic",ant:"military",ex:"Civil rights protests changed history greatly.",exKr:"시민권 운동이 역사를 크게 바꿨다."},
+{id:485,word:"pause",meaning:"[동/명] 잠시 멈추다, 중단",pos:"v/n",syn:"stop",ant:"continue",ex:"She paused for a moment before answering.",exKr:"그녀는 대답하기 전 잠시 멈췄다."},
+{id:486,word:"prove",meaning:"[동] 입증하다",pos:"v",syn:"demonstrate",ant:"disprove",ex:"He proved his innocence with strong evidence.",exKr:"그는 강력한 증거로 자신의 결백을 입증했다."},
+{id:487,word:"lecture",meaning:"[명/동] 강의, 강의를 하다",pos:"n/v",syn:"talk",ant:"—",ex:"The professor gave a fascinating lecture on history.",exKr:"교수는 역사에 관한 흥미로운 강의를 했다."},
+{id:488,word:"minor",meaning:"[형/명] 사소한, 미성년자",pos:"adj/n",syn:"small",ant:"major",ex:"The changes were minor and easy to implement.",exKr:"변경 사항은 사소하고 구현하기 쉬웠다."},
+{id:489,word:"duty",meaning:"[명] 의무, 관세",pos:"n",syn:"responsibility",ant:"right",ex:"It is our duty to protect the environment.",exKr:"환경을 보호하는 것은 우리의 의무이다."},
+{id:490,word:"vigor",meaning:"[명] 활력",pos:"n",syn:"energy",ant:"weakness",ex:"She tackled every task with great vigor.",exKr:"그녀는 큰 활력으로 모든 작업에 임했다."},
+{id:491,word:"organize",meaning:"[동] 조직하다, 구성하다",pos:"v",syn:"arrange",ant:"disorganize",ex:"She organized the charity event very efficiently.",exKr:"그녀는 자선 행사를 매우 효율적으로 조직했다."},
+{id:492,word:"chief",meaning:"[명/형] 우두머리, 주요한",pos:"n/adj",syn:"leader",ant:"subordinate",ex:"The chief of police held a press conference.",exKr:"경찰서장이 기자회견을 열었다."},
+{id:493,word:"complicated",meaning:"[형] 복잡한",pos:"adj",syn:"complex",ant:"simple",ex:"The instructions were too complicated to follow.",exKr:"지침이 너무 복잡해서 따르기 어려웠다."},
+{id:494,word:"digest",meaning:"[동/명] 소화하다, 요약",pos:"v/n",syn:"process",ant:"—",ex:"It took time to digest all the new information.",exKr:"모든 새 정보를 소화하는 데 시간이 걸렸다."},
+{id:495,word:"shortage",meaning:"[명] 부족, 결함",pos:"n",syn:"lack",ant:"surplus",ex:"There is a shortage of qualified nurses in the region.",exKr:"그 지역에는 자격을 갖춘 간호사가 부족하다."},
+{id:496,word:"laboratory",meaning:"[명] 실험실",pos:"n",syn:"lab",ant:"—",ex:"The scientists conducted experiments in the laboratory.",exKr:"과학자들은 실험실에서 실험을 실시했다."},
+{id:497,word:"arrive",meaning:"[동] 도착하다",pos:"v",syn:"reach",ant:"depart",ex:"The train will arrive at the station at noon.",exKr:"기차는 정오에 역에 도착할 것이다."},
+{id:498,word:"generous",meaning:"[형] 관대한, 넉넉한",pos:"adj",syn:"kind",ant:"selfish",ex:"She was generous enough to donate her savings.",exKr:"그녀는 저축을 기부할 만큼 관대했다."},
+{id:499,word:"laundry",meaning:"[명] 세탁물",pos:"n",syn:"washing",ant:"—",ex:"She does laundry every Sunday morning.",exKr:"그녀는 매주 일요일 아침 빨래를 한다."},
+{id:500,word:"transform",meaning:"[동] 변형시키다, 변환하다",pos:"v",syn:"change",ant:"preserve",ex:"Exercise can transform both body and mind.",exKr:"운동은 신체와 마음 모두를 변화시킬 수 있다."}
+
+];
+
+const CARDS=[];
+WORDS.forEach(w=>{CARDS.push({cid:`${w.id}_en`,dir:'en',word:w});CARDS.push({cid:`${w.id}_kr`,dir:'kr',word:w});});
+
+let weights={};
+CARDS.forEach(c=>weights[c.cid]=1);
+let current=null,flipped=false,showPanel=false,started=false;
+let stats={total:0,correct:0,wrong:0};
+let wrongCids=new Set(),seenCids=new Set();
+
+function pick(){const total=CARDS.reduce((s,c)=>s+(weights[c.cid]||1),0);let r=Math.random()*total;for(const c of CARDS){r-=(weights[c.cid]||1);if(r<=0)return c;}return CARDS[CARDS.length-1];}
+function goNext(){current=pick();flipped=false;render();}
+function doFlip(){if(flipped||!current)return;flipped=true;seenCids.add(current.cid);render();}
+function answer(knew){if(!current)return;if(knew){weights[current.cid]=Math.max(1,(weights[current.cid]||1)-1);}else{weights[current.cid]=Math.min(8,(weights[current.cid]||1)+3);wrongCids.add(current.cid);}stats.total++;if(knew)stats.correct++;else stats.wrong++;goNext();}
+function togglePanel(){showPanel=!showPanel;render();}
+
+function render(){
+  const app=document.getElementById('app');
+  if(!started){
+    app.innerHTML=`<div class="start-wrap">
+  <div class="start-logo">📖</div>
+  <h1 class="start-title">영단어 1~500 암기</h1>
+  <p class="start-sub">총 <b>1000장</b> (500단어 × 영→한 + 한→영) · 간격 반복</p>
+  <div class="info-box">
+    <div class="info-title">사용 방법</div>
+    <div class="info-row"><span class="info-icon">🇺🇸</span><span><b>영→한</b> : 영어 단어 보고 한국어 뜻 맞추기</span></div>
+    <div class="info-row"><span class="info-icon">🇰🇷</span><span><b>한→영</b> : 한국어 뜻 보고 영어 단어 맞추기</span></div>
+    <div class="info-row"><span class="info-icon">🃏</span><span>카드 클릭 / <b>Space</b> → 정답 확인</span></div>
+    <div class="info-row"><span class="info-icon">❌</span><span><b>모르겠어요</b> / ← 키 → 가중치 3배 증가</span></div>
+    <div class="info-row"><span class="info-icon">✅</span><span><b>알아요</b> / → 키 → 가중치 감소</span></div>
+  </div>
+  <button class="start-btn" onclick="startApp()">학습 시작 🚀</button>
+</div>`;return;}
+
+  const w=current?current.word:null;
+  const dir=current?current.dir:null;
+  const acc=stats.total>0?Math.round(stats.correct/stats.total*100):0;
+  const isHard=current&&(weights[current.cid]||1)>=4;
+  const isNew=current&&!seenCids.has(current.cid);
+  const frontText=dir==='en'?w.word:w.meaning;
+  const frontLabel=dir==='en'?'🇺🇸 영어 → 한국어':'🇰🇷 한국어 → 영어';
+  const fLen=frontText?frontText.length:0;
+  const wClass=fLen>22?"long":fLen>14?"medium":"";
+  const wrongCards=CARDS.filter(c=>wrongCids.has(c.cid));
+  const progPct=Math.round(seenCids.size/CARDS.length*100);
+
+  let cardHtml='';
+  if(!flipped){
+    cardHtml=`<div class="card-front" onclick="doFlip()">
+  <div class="dir-label">${frontLabel}</div>
+  <div class="card-word ${wClass}">${frontText||''}</div>
+  <div class="card-hint">👆 클릭 또는 <kbd>Space</kbd> 로 정답 확인</div>
+</div>
+<button class="flip-btn" onclick="doFlip()">정답 확인하기 👁</button>
+<div class="kbd-hint"><span>Space</span> 뒤집기</div>`;
+  }else{
+    cardHtml=`<div class="card-back">
+  <div class="back-dir">${dir==='en'?'🇺🇸 영어 → 한국어':'🇰🇷 한국어 → 영어'}</div>
+  <div class="back-word">${w.word}</div>
+  <div class="back-meaning">${w.meaning}</div>
+  <div class="syn-ant">
+    <div class="sa-box syn"><div class="sa-lbl syn">유의어 (Synonym)</div><div class="sa-val syn">${w.syn}</div></div>
+    <div class="sa-box ant"><div class="sa-lbl ant">반의어 (Antonym)</div><div class="sa-val ant">${w.ant}</div></div>
+  </div>
+  <div class="ex-box">
+    <div class="ex-lbl">📝 예문</div>
+    <div class="ex-en">"${w.ex}"</div>
+    <div class="ex-kr">${w.exKr}</div>
+  </div>
+</div>
+<div class="btn-row">
+  <button class="ans-btn btn-no" onclick="answer(false)">❌ 모르겠어요</button>
+  <button class="ans-btn btn-yes" onclick="answer(true)">✅ 알아요</button>
+</div>
+<div class="kbd-hint"><span>←</span> 모르겠어요 &nbsp;|&nbsp; <span>→</span> 알아요</div>`;}
+
+  app.innerHTML=`<div class="main">
+  <div class="header">
+    <div class="stats">
+      <div class="stat"><div class="stat-lbl">총</div><div class="stat-val" style="color:#475569">${stats.total}</div></div>
+      <div class="stat"><div class="stat-lbl">정답</div><div class="stat-val" style="color:#16a34a">${stats.correct}</div></div>
+      <div class="stat"><div class="stat-lbl">오답</div><div class="stat-val" style="color:#dc2626">${stats.wrong}</div></div>
+      <div class="stat"><div class="stat-lbl">정확도</div><div class="stat-val" style="color:#0284c7">${acc}%</div></div>
+    </div>
+    <button class="wrong-btn ${wrongCids.size===0?'empty':''}" onclick="togglePanel()">❌ 오답 ${wrongCids.size}개</button>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-bg"><div class="prog-fill" style="width:${progPct}%"></div></div>
+    <div class="prog-txt">${seenCids.size} / ${CARDS.length}장 확인 (${progPct}%)</div>
+  </div>
+  <div class="card-area">
+    <div class="badges">
+      ${current?`<span class="badge badge-pos">${w.pos}</span>`:''}
+      ${isHard?`<span class="badge badge-hard">🔥 집중 ×${weights[current.cid]}</span>`:''}
+      ${isNew&&!flipped?`<span class="badge badge-new">✨ NEW</span>`:''}
+    </div>
+    ${cardHtml}
+  </div>
+</div>
+<div class="panel ${showPanel?'open':''}">
+  <div class="panel-hdr">
+    <div class="panel-title">❌ 오답 카드 (${wrongCards.length})</div>
+    <button class="panel-close" onclick="togglePanel()">×</button>
+  </div>
+  ${wrongCards.length===0?`<div class="empty-msg">아직 틀린 카드가 없어요! 👏<br><br>계속 열심히 해보세요!</div>`:wrongCards.map(c=>`<div class="w-item"><div class="w-word">${c.dir==='en'?'🇺🇸':' 🇰🇷'} ${c.dir==='en'?c.word.word:c.word.meaning}</div><div class="w-meaning">${c.dir==='en'?c.word.meaning:c.word.word}</div><div class="w-weight">가중치 ×${weights[c.cid]}</div></div>`).join('')}
+</div>`;}
+
+window.startApp=function(){started=true;goNext();}
+window.doFlip=doFlip;
+window.answer=answer;
+window.togglePanel=togglePanel;
+document.addEventListener('keydown',e=>{if(!started)return;if(e.key===' '&&!flipped){e.preventDefault();doFlip();}if(e.key==='ArrowRight'&&flipped)answer(true);if(e.key==='ArrowLeft'&&flipped)answer(false);});
+render();
+</script>
+</body>
+</html>
